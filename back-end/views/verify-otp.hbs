@@ -1,0 +1,11 @@
+<body>
+  <div class="container">
+    <h1>Verify OTP</h1>
+    <form action="/verify-otp" method="POST">
+      <input type="hidden" name="mobile" value="{{mobile}}">
+      <label for="otp">Enter OTP</label>
+      <input type="text" id="otp" name="otp" placeholder="Enter the OTP">
+      <button type="submit">Verify</button>
+    </form>
+  </div>
+</body>

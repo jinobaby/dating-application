@@ -1,0 +1,30 @@
+<body class="signup-body">
+  <div class="signup-container">
+    <div class="signup-header">
+      <small class="signup-header-small">Membership Application</small>
+      <h1 class="signup-header-title">What's your<br>mobile number and Password</h1>
+    </div>
+
+    <form class="signup-form" action="/signup-data" method="POST">
+      <div class="signup-form-group">
+        <label class="signup-label" for="email">Email</label>
+        <input class="signup-input" type="email" id="email" name="email" placeholder="Enter your Email address">
+      </div>
+
+      <div class="signup-form-group">
+        <label class="signup-label" for="password">Password</label>
+        <input class="signup-input" type="password" id="password" name="password" placeholder="Create your Password">
+      </div>
+
+      <div class="signup-checkbox-group">
+        <input class="signup-checkbox" type="checkbox" id="consent" required>
+        <label class="signup-checkbox-label" for="consent">
+          allow CRED to access your credit information from
+          <a class="signup-checkbox-link" href="#">RBI approved bureaus</a>, and bills from Bharat Connect.
+        </label>
+      </div>
+
+      <button class="signup-button">Proceed →</button>
+    </form>
+  </div>
+</body>

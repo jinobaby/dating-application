@@ -1,0 +1,32 @@
+<body class="login-body">
+  <div class="login-container">
+    <div class="login-header">
+      <small class="login-header-small">Membership Login</small>
+      <h1 class="login-header-title">What's your<br>mobile number and Password</h1>
+    </div>
+
+    <form class="login-form" action="/login-data" method="POST">
+      <div class="login-form-group">
+        <label class="login-label" for="email">Email</label>
+        <input class="login-input" type="email" id="email" name="email" placeholder="Enter your Email address">
+      </div>
+
+      <div class="login-form-group">
+        <label class="login-label" for="password">Password</label>
+        <input class="login-input" type="password" id="password" name="password" placeholder="Enter your Password">
+      </div>
+
+      {{#if message}}
+        <div class="login-error-group">
+          <p class="login-error">{{message}}</p>
+        </div>
+      {{/if}}
+
+      <div class="login-links">
+        <a class="login-signup-link" href="/signup">Signup</a>
+      </div>
+
+      <button class="login-button">Proceed →</button>
+    </form>
+  </div>
+</body>

@@ -11,29 +11,40 @@ var mongoStore = require('connect-mongo')
 
 var app = express();
 
+const fs = require('fs');
+const uploadDir = path.join(__dirname, 'public/uploads');
+
+if (!fs.existsSync(uploadDir)) {
+  fs.mkdirSync(uploadDir, { recursive: true });
+}
+
 //database connection
-mongoose.connect('mongodb://127.0.0.1:27017/my-app-Databasee').then(() => {
+mongoose.connect('mongodb://127.0.0.1:27017/back-end-DatingSite').then(() => {
   console.log("Database Connected");
 }).catch((error) => {
   console.log("Error from database", error);
   
 })
 
-//session setup
+//  session setup
 app.use(
   session({
     secret: 'hbdfhfhbhf',
     resave: false,
     saveUninitialized: false,
     store: mongoStore.create({
-      mongoUrl: 'mongodb://127.0.0.1:27017/my-app-Database01',
+      mongoUrl: 'mongodb://127.0.0.1:27017/back-end-DatingSite',
       collectionName: 'sessions',
     }),
     cookie: {
       maxAge: 1000 * 60 * 60 * 24, // 1 day
+      httpOnly: true, // Prevent client-side access
+      secure: false, // Set to true in production with HTTPS
+      sameSite: 'strict', // Protect against CSRF
     }
   })
-)
+  )
+
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'hbs');
