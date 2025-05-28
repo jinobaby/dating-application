@@ -9,61 +9,61 @@ const path = require('path');
 
 
 // Configure multer storage
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, path.join(__dirname, '../public/uploads'));
-  },
-  filename: (req, file, cb) => {
-    const userId = req.session.userId;
-    const uniqueSuffix = `${Date.now()}-${Math.round(Math.random() * 1E9)}`;
-    cb(null, `${userId}-${uniqueSuffix}-${file.originalname}`);
-  },
-});
+// const storage = multer.diskStorage({
+//   destination: (req, file, cb) => {
+//     cb(null, path.join(__dirname, '../public/uploads'));
+//   },
+//   filename: (req, file, cb) => {
+//     const userId = req.session.userId;
+//     const uniqueSuffix = `${Date.now()}-${Math.round(Math.random() * 1E9)}`;
+//     cb(null, `${userId}-${uniqueSuffix}-${file.originalname}`);
+//   },
+// });
 
-const upload = multer({
-  storage: storage,
-  limits: { files: 6 }, // Limit to 6 files
-  fileFilter: (req, file, cb) => {
-    console.log('File being uploaded:', file.originalname);
-    const allowedTypes = ['image/jpeg', 'image/png', 'image/jpg'];
-    if (!allowedTypes.includes(file.mimetype)) {
-      console.error('Invalid file type:', file.mimetype);
-      return cb(new Error('Only JPEG, PNG, and JPG files are allowed.'));
-    }
-    cb(null, true);
-  },
-});
+// const upload = multer({
+//   storage: storage,
+//   limits: { files: 6 }, // Limit to 6 files
+//   fileFilter: (req, file, cb) => {
+//     console.log('File being uploaded:', file.originalname);
+//     const allowedTypes = ['image/jpeg', 'image/png', 'image/jpg'];
+//     if (!allowedTypes.includes(file.mimetype)) {
+//       console.error('Invalid file type:', file.mimetype);
+//       return cb(new Error('Only JPEG, PNG, and JPG files are allowed.'));
+//     }
+//     cb(null, true);
+//   },
+// });
 
 // Route to handle image uploads
-router.post('/upload-images', isAuthenticated, (req, res) => {
-  if (!req.session.userId) {
-    console.error('Session userId is undefined');
-    return res.status(400).render('error', { message: 'User session not found.' });
-  }
+// router.post('/upload-images', isAuthenticated, (req, res) => {
+//   if (!req.session.userId) {
+//     console.error('Session userId is undefined');
+//     return res.status(400).render('error', { message: 'User session not found.' });
+//   }
 
-  upload.array('images', 6)(req, res, (err) => {
-    if (err instanceof multer.MulterError) {
-      console.error('Multer error:', err);
-      return res.status(400).render('create-upload', {
-        message: 'Error uploading images. Please try again.',
-      });
-    } else if (err) {
-      console.error('Unknown error:', err);
-      return res.status(500).render('error', { message: 'Internal server error' });
-    }
+//   upload.array('images', 6)(req, res, (err) => {
+//     if (err instanceof multer.MulterError) {
+//       console.error('Multer error:', err);
+//       return res.status(400).render('create-upload', {
+//         message: 'Error uploading images. Please try again.',
+//       });
+//     } else if (err) {
+//       console.error('Unknown error:', err);
+//       return res.status(500).render('error', { message: 'Internal server error' });
+//     }
 
-    // Check if the number of files is within the allowed range
-    if (!req.files || req.files.length < 4 || req.files.length > 6) {
-      console.error('Invalid number of files:', req.files ? req.files.length : 0);
-      return res.status(400).render('create-upload', {
-        message: 'Please upload between 4 and 6 images.',
-      });
-    }
+//     // Check if the number of files is within the allowed range
+//     if (!req.files || req.files.length < 4 || req.files.length > 6) {
+//       console.error('Invalid number of files:', req.files ? req.files.length : 0);
+//       return res.status(400).render('create-upload', {
+//         message: 'Please upload between 4 and 6 images.',
+//       });
+//     }
 
-    console.log('Uploaded files:', req.files);
-    res.redirect('/profile'); // Redirect to profile after successful upload
-  });
-});
+//     console.log('Uploaded files:', req.files);
+//     res.redirect('/profile'); // Redirect to profile after successful upload
+//   });
+// });
 
 //authentication
 function isAuthenticated(req, res, next) {
@@ -78,18 +78,19 @@ router.post('/signup-data', async (req, res) => {
   const { email, password } = req.body;
 
   try {
-    //hash the password
+    // Hash the password
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    //save the user to the database
+    // Save the user to the database
     const newUser = new user({
       email: email,
       password: hashedPassword,
     });
     const savedUser = await newUser.save();
 
+    // Set the session userId and redirect to the create-account page
     req.session.userId = savedUser._id;
-    res.redirect('/create-name');
+    res.redirect(`/location-permission?userId=${newUser._id}`);
   } catch (error) {
     console.error('Error saving user:', error);
     res.status(500).json({ error: 'Internal server error' });
@@ -115,7 +116,7 @@ router.post('/login-data', async (req, res) => {
         res.render('login', { message: 'invalid Email or Password' });
       }
     } else {
-      res.render('login', { message: 'User Not Found' });
+      res.render('login', { message: 'Sorry we couldnt find your account' });
     }
   } catch (error) {
     console.error('Error during login:', error);
@@ -123,48 +124,77 @@ router.post('/login-data', async (req, res) => {
   }
 });
 
-//post the name data
-router.post('/create-name', isAuthenticated, async (req, res) => {
-  const { fullName } = req.body;
+//saved the lat and long to database and redirects to notification handlebar
+router.post('/save-location', isAuthenticated, async (req, res) => {
+  const { latitude, longitude } = req.body;
 
   try {
-    if (!fullName) {
-      return res.render('create-name', { message: 'Full name is required.' });
-    }
-    // Split the full name into parts
-    const nameParts = fullName.trim().split(/\s+/);
-
-    if (nameParts.length === 1) {
-      // If only one word, set it as the first name
-      await user.findByIdAndUpdate(req.session.userId, {
-        firstName: nameParts[0],
-      });
-    } else if (nameParts.length === 2) {
-      // If two words, set the first and last name
-      await user.findByIdAndUpdate(req.session.userId, {
-        firstName: nameParts[0],
-        lastName: nameParts[1],
-      });
-    } else if (nameParts.length === 3) {
-      // If three words, set first, middle, and last name
-      await user.findByIdAndUpdate(req.session.userId, {
-        firstName: nameParts[0],
-        middleName: nameParts[1],
-        lastName: nameParts[2],
-      });
-    } else {
-      // If more than three words, ask the user to enter a valid name
-      return res.render('create-name', {
-        message: 'Please enter a valid name.',
-      });
-    }
-
-    res.redirect('/create-upload');
+    await user.findByIdAndUpdate(req.session.userId, {
+      location: { latitude, longitude }
+    })
+    res.json({ message: 'Location saved succesfully', redirect: `/notification?userId=${req.session.userId}` })
   } catch (error) {
-    console.error('Error updating user name:', error);
-    res.status(500).render('error', { message: 'Internal server error' });
+    console.log('Error Saving Location');
+    res.status(500).json({ error: 'Failed to save location' });
+  }
+})
+
+//
+router.post('/enable-notifications', isAuthenticated, async (req, res) => {
+  try {
+    const { enabled } = req.body;
+    await user.findByIdAndUpdate(req.session.userId, { NotificationsEnabled: !!enabled });
+  res.json({ redirect: `/createaccount?userId=${req.session.userId}` }); // Send redirect URL in JSON
+  } catch (error) {
+    console.error('Error enabling notifications:', error);
+    res.status(500).json({ error: 'Failed to update notification preference' });
   }
 });
+
+
+
+//post the name data
+// router.post('/create-name', isAuthenticated, async (req, res) => {
+//   const { fullName } = req.body;
+
+//   try {
+//     if (!fullName) {
+//       return res.render('create-name', { message: 'Full name is required.' });
+//     }
+//     // Split the full name into parts
+//     const nameParts = fullName.trim().split(/\s+/);
+
+//     if (nameParts.length === 1) {
+//       // If only one word, set it as the first name
+//       await user.findByIdAndUpdate(req.session.userId, {
+//         firstName: nameParts[0],
+//       });
+//     } else if (nameParts.length === 2) {
+//       // If two words, set the first and last name
+//       await user.findByIdAndUpdate(req.session.userId, {
+//         firstName: nameParts[0],
+//         lastName: nameParts[1],
+//       });
+//     } else if (nameParts.length === 3) {
+//       // If three words, set first, middle, and last name
+//       await user.findByIdAndUpdate(req.session.userId, {
+//         firstName: nameParts[0],
+//         middleName: nameParts[1],
+//         lastName: nameParts[2],
+//       });
+//     } else {
+//       // If more than three words, ask the user to enter a valid name
+//       return res.render('create-name', {
+//         message: 'Please enter a valid name.',
+//       });
+//     }
+
+//     res.redirect('/profile');
+//   } catch (error) {
+//     console.error('Error updating user name:', error);
+//     res.status(500).render('error', { message: 'Internal server error' });
+//   }
+// });
 
 // display the signup hbs
 router.get('/signup', (req, res) => {
@@ -175,15 +205,15 @@ router.get('/signup', (req, res) => {
   }
 });
 
-//display the create-name hbs
-router.get('/create-name', isAuthenticated, (req, res) => {
-  res.render('create-name');
+//display the createaccount hbs
+router.get('/createaccount', isAuthenticated, (req, res) => {
+  res.render('createaccount');
 });
 
 //display the create-name hbs
-router.get('/create-upload', isAuthenticated, (req, res) => {
-  res.render('create-upload');
-});
+// router.get('/create-upload', isAuthenticated, (req, res) => {
+//   res.render('create-upload');
+// });
 
 //display the login hbs
 router.get('/login', (req, res) => {
@@ -195,33 +225,43 @@ router.get('/home', isAuthenticated, (req, res) => {
   res.render('home', { userId: req.session.userId });
 });
 
-//display the profile hbs
-router.get('/profile', isAuthenticated, async (req, res) => {
-  try {
-    // Fetch user data from the database using the session userId
-    const userData = await user.findById(req.session.userId).lean();
-
-    if (!userData) {
-      return res.status(404).render('error', { message: 'User not found' });
-    }
-
-    // Fetch uploaded images from the uploads directory
-    const fs = require('fs');
-    const uploadsDir = path.join(__dirname, '../public/uploads');
-    if (!fs.existsSync(uploadsDir)) {
-      fs.mkdirSync(uploadsDir, { recursive: true });
-    }
-    const userImages = fs.readdirSync(uploadsDir).filter(file => file.startsWith(req.session.userId));
-
-    // Add images to user data
-    userData.images = userImages;
-
-    // Render the profile page with user data
-    res.render('profile', { user: userData });
-  } catch (error) {
-    console.error('Error fetching user data for profile:', error);
-    res.status(500).render('error', { message: 'Internal server error' });
-  }
+//location-permission.hbs page rendering
+router.get('/location-permission', isAuthenticated, (req, res) => {
+  res.render('location-permission', { userId: req.session.userId });
 });
+
+//notification-permission.hbs page rendering
+router.get('/notification', isAuthenticated, (req, res) => {
+  res.render('notification', { userId: req.session.userId });
+});
+
+//display the profile hbs
+// router.get('/profile', isAuthenticated, async (req, res) => {
+//   try {
+//     // Fetch user data from the database using the session userId
+//     const userData = await user.findById(req.session.userId).lean();
+
+//     if (!userData) {
+//       return res.status(404).render('error', { message: 'User not found' });
+//     }
+
+//     // Fetch uploaded images from the uploads directory
+//     const fs = require('fs');
+//     const uploadsDir = path.join(__dirname, '../public/uploads');
+//     if (!fs.existsSync(uploadsDir)) {
+//       fs.mkdirSync(uploadsDir, { recursive: true });
+//     }
+//     const userImages = fs.readdirSync(uploadsDir).filter(file => file.startsWith(req.session.userId));
+
+//     // Add images to user data
+//     userData.images = userImages;
+
+//     // Render the profile page with user data
+//     res.render('profile', { user: userData });
+//   } catch (error) {
+//     console.error('Error fetching user data for profile:', error);
+//     res.status(500).render('error', { message: 'Internal server error' });
+//   }
+// });
 
 module.exports = router;

@@ -1,0 +1,56 @@
+<body class="membership-body">
+  <div class="form-container-image">
+
+    <img style="width: 100%; height: 100%; border-radius: 38px" src='/images/dating-page1.jpg' alt="Background Image">
+
+  </div>
+
+  <div class="form-container">
+    <div class="header-area">
+      <img class="form-logo" style="height: 50px; width: 50px;" src='/images/j-svg.svg' alt="Logo">
+    </div>
+
+    <header class="form-header">
+      <h1 style="font-size: 48px; color: #f9f9f9" class="form-subtitle">Get Started</h1>
+      <a style="font-size: 25px;" class="form-title">Sign up via Email and create your own Password.</a>
+    </header>
+    
+    <form class="membership-form" action="/createaccount" method="POST">
+      <div class="form-group">
+        <label class="form-label" for="name">Your first name</label>
+        <input class="form-input" type="text" id="name" name="name" autocomplete="off">
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="Your birthday">Your birthday</label>
+        <div class="birthday-labels">
+          <label class="form-label" for="day">Day</label>
+          <label class="form-label" for="month">Month</label>
+          <label class="form-label" for="year">Year</label>
+        </div>
+
+        <div class="birthday-inputs">
+          <input class="form-input birthday-input dark-input" type="number" id="day" name="day" autocomplete="off">
+          <input class="form-input birthday-input dark-input" type="number" id="month" name="month" autocomplete="off">
+          <input class="form-input birthday-input dark-input" type="number" id="year" name="year" autocomplete="off">
+        </div>
+        <label class="" style="  color: #fff; font-weight: 400; font-size: 16px; text-align: center;" for="Your birthday">It's never too early to count down</label>
+      </div>
+
+      <button style="margin-bottom: 10px;" class="submit-button white-btn">Proceed →</button>
+
+    </form>
+  </div>
+
+
+  <!-- Age Confirmation Modal -->
+  <div id="ageModal" style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(0,0,0,0.7); z-index:1000; align-items:center; justify-content:center;">
+    <div style="background:#181818; color:#fff; border-radius:20px; padding:32px 24px; max-width:350px; width:90%; margin:auto; text-align:center; box-shadow:0 4px 32px rgba(0,0,0,0.3);">
+      <div id="ageModalText" style="font-size:20px; margin-bottom:24px;"></div>
+      <button id="cancelAge" style="margin-right:16px; padding:10px 24px; border-radius:24px; border:none; background:#333; color:#fff; font-weight:600; cursor:pointer;">Cancel</button>
+      <button id="confirmAge" style="padding:10px 24px; border-radius:24px; border:none; background:#fff; color:#111; font-weight:600; cursor:pointer;">Confirm</button>
+    </div>
+  </div>
+
+</body>
+<script src="/javascripts/agecalculate.js"></script>

@@ -1,30 +1,46 @@
-<body class="signup-body">
-  <div class="signup-container">
-    <div class="signup-header">
-      <small class="signup-header-small">Membership Application</small>
-      <h1 class="signup-header-title">What's your<br>mobile number and Password</h1>
+<body class="membership-body">
+
+  <div class="form-container-image">
+  
+    <img style="width: 100%; height: 100%; border-radius: 38px" src='/images/dating-page1.jpg' alt="Background Image">
+  
+  </div>
+  
+  <div class="form-container">
+    
+    <div class="header-area">
+      <img class="form-logo" style="height: 50px; width: 50px;" src='/images/j-svg.svg' alt="Logo">
     </div>
 
-    <form class="signup-form" action="/signup-data" method="POST">
-      <div class="signup-form-group">
-        <label class="signup-label" for="email">Email</label>
-        <input class="signup-input" type="email" id="email" name="email" placeholder="Enter your Email address">
+    <header class="form-header">
+      <h1 style="font-size: 48px; color: #f9f9f9" class="form-subtitle">Get Started</h1>
+      <a style="font-size: 25px;" class="form-title">Sign up via Email and create your own Password.</a>
+    </header>
+
+    <form class="membership-form" action="/signup-data" method="POST">
+      <div class="form-group">
+        <label class="form-label" for="email">Email</label>
+        <input class="form-input" type="email" id="email" name="email" placeholder="Enter your Email address" autocomplete="off">
       </div>
 
-      <div class="signup-form-group">
-        <label class="signup-label" for="password">Password</label>
-        <input class="signup-input" type="password" id="password" name="password" placeholder="Create your Password">
+      <div class="form-group">
+        <label class="form-label" for="password">Password</label>
+        <input class="form-input" type="password" id="password" name="password" placeholder="Create your Password" autocomplete="off">
       </div>
 
-      <div class="signup-checkbox-group">
-        <input class="signup-checkbox" type="checkbox" id="consent" required>
-        <label class="signup-checkbox-label" for="consent">
-          allow CRED to access your credit information from
-          <a class="signup-checkbox-link" href="#">RBI approved bureaus</a>, and bills from Bharat Connect.
+      <button style="margin-bottom: 10px;" class="submit-button">Proceed →</button>
+      
+      <div class="consent-group">
+        <label class="consent-label" for="consent">
+          By continuing, you agree to our
+          <a class="consent-link" href="#">terms and conditions</a>
+          , and 
+          <a class="consent-link" href="#">privacy policy.</a>
         </label>
       </div>
 
-      <button class="signup-button">Proceed →</button>
     </form>
+  
   </div>
+
 </body>
