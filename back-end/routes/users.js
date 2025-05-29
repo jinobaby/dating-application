@@ -5,6 +5,7 @@ const multer = require('multer');
 var post = require('../models/postSchema');
 const { route } = require('../app');
 const path = require('path');
+const { log } = require('console');
 
 
 
@@ -144,57 +145,87 @@ router.post('/enable-notifications', isAuthenticated, async (req, res) => {
   try {
     const { enabled } = req.body;
     await user.findByIdAndUpdate(req.session.userId, { NotificationsEnabled: !!enabled });
-  res.json({ redirect: `/createaccount?userId=${req.session.userId}` }); // Send redirect URL in JSON
+    res.json({ redirect: `/createaccount?userId=${req.session.userId}` }); // Send redirect URL in JSON
   } catch (error) {
     console.error('Error enabling notifications:', error);
     res.status(500).json({ error: 'Failed to update notification preference' });
   }
 });
 
+router.post('/createaccount', isAuthenticated, async (req, res) => {
+  try {
+    const { name, day, month, year } = req.body;
+
+    if (!name || !day || !month || !year) {
+      return res.status(400).render('createaccount', { message: ' Please Fill Out the Fields ' })
+
+    }
+
+    await user.findByIdAndUpdate(req.session.userId, {
+      firstName: name,
+      dateOfBirth: new Date(`${year}-${month}-${day}`)
+    })
+    res.redirect(`/gender?userId=${req.session.userId}`)
+  } catch (error) {
+    console.error('Error adding name and Date Of birth:', error);
+    res.status(500).json({ error: 'Failed to add name and DOB' });
+
+  }
+})
+
+//to manage data from gender.hbs
+router.post('/gender', isAuthenticated, async (req, res) => {
+  try {
+    const { gender } = req.body
+
+    if (!gender) {
+      return res.status(400).render('gender', { message: 'Please select the gender' })
+    }
+
+    await user.findByIdAndUpdate(req.session.userId, {
+      gender: gender
+    });
+
+    res.redirect(`/typeOfRelationship?userId=${req.session.userId}`)
+
+  } catch (error) {
+    console.error('Error adding Gender:', error);
+    res.status(500).json({ error: 'Failed to assign gender' });
+  }
+})
+
+//data manage typeOfrelationship
+router.post('/typeOfRelationship', isAuthenticated, async (req, res) => {
+  try {
+    const { choice } = req.body
+
+    if (!choice) {
+      return res.status(400).render('typeOfRelationship', { message: 'Please select the a choice' })
+    }
+    const choices = Array.isArray(req.body.choice) ? req.body.choice : [req.body.choice];
+    await user.findByIdAndUpdate(req.session.userId, {
+      choice: choices
+    });
+
+    res.redirect(`/height?userId=${req.session.userId}`)
+
+  } catch (error) {
+    console.error('Error choosing type:', error);
+    res.status(500).json({ error: 'Failed to assign type' });
+  }
+})
 
 
-//post the name data
-// router.post('/create-name', isAuthenticated, async (req, res) => {
-//   const { fullName } = req.body;
 
-//   try {
-//     if (!fullName) {
-//       return res.render('create-name', { message: 'Full name is required.' });
-//     }
-//     // Split the full name into parts
-//     const nameParts = fullName.trim().split(/\s+/);
-
-//     if (nameParts.length === 1) {
-//       // If only one word, set it as the first name
-//       await user.findByIdAndUpdate(req.session.userId, {
-//         firstName: nameParts[0],
-//       });
-//     } else if (nameParts.length === 2) {
-//       // If two words, set the first and last name
-//       await user.findByIdAndUpdate(req.session.userId, {
-//         firstName: nameParts[0],
-//         lastName: nameParts[1],
-//       });
-//     } else if (nameParts.length === 3) {
-//       // If three words, set first, middle, and last name
-//       await user.findByIdAndUpdate(req.session.userId, {
-//         firstName: nameParts[0],
-//         middleName: nameParts[1],
-//         lastName: nameParts[2],
-//       });
-//     } else {
-//       // If more than three words, ask the user to enter a valid name
-//       return res.render('create-name', {
-//         message: 'Please enter a valid name.',
-//       });
-//     }
-
-//     res.redirect('/profile');
-//   } catch (error) {
-//     console.error('Error updating user name:', error);
-//     res.status(500).render('error', { message: 'Internal server error' });
-//   }
-// });
+//render gender.hbs page and get data from database
+router.get('/gender', isAuthenticated, async (req, res) => {
+  try {
+    const userData = await user.findById(req.session.userId).lean();
+    res.render('gender', { userId: req.session.userId, name: userData?.firstName });
+  } catch (error) {
+    res.status(500).render('error', { message: 'Internal server error' });
+  }
+});
 
 // display the signup hbs
 router.get('/signup', (req, res) => {
@@ -209,11 +240,6 @@ router.get('/signup', (req, res) => {
 router.get('/createaccount', isAuthenticated, (req, res) => {
   res.render('createaccount');
 });
-
-//display the create-name hbs
-// router.get('/create-upload', isAuthenticated, (req, res) => {
-//   res.render('create-upload');
-// });
 
 //display the login hbs
 router.get('/login', (req, res) => {
@@ -233,6 +259,26 @@ router.get('/location-permission', isAuthenticated, (req, res) => {
 //notification-permission.hbs page rendering
 router.get('/notification', isAuthenticated, (req, res) => {
   res.render('notification', { userId: req.session.userId });
+});
+
+//typeOfRelationship.hbs page rendering
+router.get('/typeOfRelationship', isAuthenticated, async (req, res) => {
+  try{
+    const userData = await user.findById(req.session.userId).lean();
+    res.render('typeOfRelationship', { userId: req.session.userId, name: userData?.firstName });
+  } catch (error) {
+    res.status(500).render('error', { message: 'Internal server error' });
+  }
+});
+
+//typeOfRelationship.hbs page rendering
+router.get('/height', isAuthenticated, async (req, res) => {
+  try{
+    const userData = await user.findById(req.session.userId).lean();
+    res.render('height', { userId: req.session.userId, name: userData?.firstName });
+  } catch (error) {
+    res.status(500).render('error', { message: 'Internal server error' });
+  }
 });
 
 //display the profile hbs

@@ -143,6 +143,52 @@ margin: 0;
   gap: 10px;
   font-size: 20px;
 }
+.form-radio-group{
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
+  height: 50px;
+  background-color: var(--background-dark);
+  margin-left: 10px;
+  margin-right: 10px;
+  padding-left: 40px;
+  padding-right: 40px;
+  border-radius: 38px;
+  align-items: center;
+  justify-content: space-between;
+}
+.custom-radio-label {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  cursor: pointer;
+  user-select: none;
+  font-size: 20px;
+  color: #bbbbbb;
+  padding: 10px 0;
+}
+
+.custom-radio-label input[type="radio"],
+.custom-radio-label input[type="checkbox"] {
+  display: none;
+}
+
+.custom-radio {
+  width: 22px;
+  height: 22px;
+  border: 2px solid #fff;
+  border-radius: 50%;
+  margin-left: auto;
+  background: transparent;
+  position: relative;
+  transition: 0.5s;
+}
+
+.custom-radio-label input[type="radio"]:checked + .custom-radio,
+.custom-radio-label input[type="checkbox"]:checked + .custom-radio {
+  background: #fff;
+  box-shadow: 0 0 0 4px #222 inset;
+}
 .form-label{
   padding-left: 12px;
   font-family: 'Satoshi', sans-serif;

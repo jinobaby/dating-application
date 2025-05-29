@@ -1,0 +1,51 @@
+<body class="membership-body">
+  <div class="form-container-image">
+
+    <img style="width: 100%; height: 100%; border-radius: 38px" src='/images/dating-page1.jpg' alt="Background Image">
+
+  </div>
+
+  <div class="form-container">
+    <div class="header-area">
+      <img class="form-logo" style="height: 50px; width: 50px;" src='/images/j-svg.svg' alt="Logo">
+    </div>
+
+    <header class="form-header">
+      <h1 style="font-size: 38px; color: #f9f9f9" class="form-subtitle">{{#if name}}{{name}}, {{/if}}is a great name</h1>
+      <a style="font-size: 20px;" class="form-title">We love that you're here. Pick the gender that best describes you, then add more about it if you like</a>
+    </header>
+    
+    <form class="membership-form" action="/gender" method="POST">
+      <div class="form-group">
+        <label class="form-label" for="name">Which gender best describes you?</label>
+        
+        <div class="form-radio-group">
+          <label class="custom-radio-label">
+            Woman
+            <input type="radio" name="gender" value="Woman" autocomplete="off" />
+            <span class="custom-radio"></span>
+          </label>
+        </div>
+        <div class="form-radio-group">
+          <label class="custom-radio-label">
+            Man
+            <input type="radio" name="gender" value="Man" autocomplete="off" />
+            <span class="custom-radio"></span>
+          </label>
+        </div>
+        <div class="form-radio-group">
+          <label class="custom-radio-label">
+            Prefer not to say
+            <input type="radio" name="gender" value="Other" autocomplete="off" />
+            <span class="custom-radio"></span>
+          </label>
+        </div>
+
+      </div>
+
+      <button style="margin-bottom: 10px;" class="submit-button white-btn">Proceed →</button>
+
+    </form>
+  </div>
+
+</body>

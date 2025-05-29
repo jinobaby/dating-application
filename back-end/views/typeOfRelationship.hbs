@@ -1,0 +1,89 @@
+<body class="membership-body">
+  <div class="form-container-image">
+
+    <img style="width: 100%; height: 100%; border-radius: 38px" src='/images/dating-page1.jpg' alt="Background Image">
+
+  </div>
+
+  <div class="form-container">
+    <div class="header-area">
+      <img class="form-logo" style="height: 50px; width: 50px;" src='/images/j-svg.svg' alt="Logo">
+    </div>
+
+    <header class="form-header">
+      <h1 style="font-size: 38px; color: #f9f9f9" class="form-subtitle">{{#if name}}{{name}}, {{/if}} what are you hoping to find?</h1>
+      <a style="font-size: 20px;" class="form-title">It's your dating journey, so choose 1 or 2 options that feel right for you.</a>
+    </header>
+    
+    <form class="membership-form" action="/typeOfRelationship" method="POST">
+      <div class="form-group" style="gap: 15px;">
+        
+        <div class="form-radio-group">
+          <label class="custom-radio-label">
+            A long-term relationship
+            <input type="checkbox" name="choice" value="A long-term relationship" autocomplete="off" onchange="limitSelection(this)" />
+            <span class="custom-radio"></span>
+          </label>
+        </div>
+        
+        <div class="form-radio-group">
+          <label class="custom-radio-label">
+            A life partner
+            <input type="checkbox" name="choice" value="A life partner" autocomplete="off" onchange="limitSelection(this)" />
+            <span class="custom-radio"></span>
+          </label>
+        </div>
+        
+        <div class="form-radio-group">
+          <label class="custom-radio-label">
+            Fun, casual dates
+            <input type="checkbox" name="choice" value="Fun, casual dates" autocomplete="off" onchange="limitSelection(this)" />
+            <span class="custom-radio"></span>
+          </label>
+        </div>
+        
+        <div class="form-radio-group">
+          <label class="custom-radio-label">
+            Intimacy, without commitment
+            <input type="checkbox" name="choice" value="Intimacy, without commitment" autocomplete="off" onchange="limitSelection(this)" />
+            <span class="custom-radio"></span>
+          </label>
+        </div>
+
+        <div class="form-radio-group">
+          <label class="custom-radio-label">
+            Marriage
+            <input type="checkbox" name="choice" value="Marriage" autocomplete="off" onchange="limitSelection(this)"/>
+            <span class="custom-radio"></span>
+          </label>
+        </div>
+
+        <div class="form-radio-group">
+          <label class="custom-radio-label">
+            Ethical non-monogamy
+            <input type="checkbox" name="choice" value="Ethical non-monogamy" autocomplete="off" onchange="limitSelection(this)"/>
+            <span class="custom-radio"></span>
+          </label>
+        </div>
+
+      </div>
+
+      <button style="margin-bottom: 10px;" class="submit-button white-btn">Proceed →</button>
+
+    </form>
+  </div>
+
+</body>
+
+<script>
+    function limitSelection(clicked) {
+    const checkboxes = document.querySelectorAll('input[name="choice"]');
+    const checkedCount = Array.from(checkboxes).filter(cb => cb.checked).length;
+
+    if (checkedCount > 2) {
+      // If more than 2 are selected, uncheck the one just clicked
+      clicked.checked = false;
+      console.log("You can only select up to 2 options.");
+    }
+  }
+</script>
