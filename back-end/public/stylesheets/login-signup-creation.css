@@ -45,16 +45,24 @@ margin: 0;
 .form-header{
   gap: 30px;
   display: flex;
-  font-family: 'Satoshi', sans-serif;
-  letter-spacing: 1.2px;
+  font-family: "Marcellus", serif;
+  font-weight: 400;
+  font-style: normal;
+  letter-spacing: 2px;
   flex-direction: column;
 }
 .form-subtitle{
   font-weight: 900;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 .form-title{
   font-weight: 600;
+    text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 .birthday-labels {
   display: flex;
@@ -89,7 +97,9 @@ margin: 0;
 }
 /* Hide number input spinners for Chrome, Safari, Edge, Opera */
 .birthday-input::-webkit-outer-spin-button,
-.birthday-input::-webkit-inner-spin-button {
+.birthday-input::-webkit-inner-spin-button,
+.form-input::-webkit-inner-spin-button
+{
   -webkit-appearance: none;
   margin: 0;
 }

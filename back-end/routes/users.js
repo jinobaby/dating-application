@@ -66,7 +66,7 @@ const { log } = require('console');
 //   });
 // });
 
-//authentication
+// Middleware to check if user is authenticated (session-based)
 function isAuthenticated(req, res, next) {
   if (req.session.userId) {
     return next();
@@ -74,22 +74,13 @@ function isAuthenticated(req, res, next) {
   res.redirect('/login');
 }
 
-//post the signup data
+// Handle user signup: hash password, save user, start session, redirect to location permission
 router.post('/signup-data', async (req, res) => {
   const { email, password } = req.body;
-
   try {
-    // Hash the password
     const hashedPassword = await bcrypt.hash(password, 10);
-
-    // Save the user to the database
-    const newUser = new user({
-      email: email,
-      password: hashedPassword,
-    });
+    const newUser = new user({ email, password: hashedPassword });
     const savedUser = await newUser.save();
-
-    // Set the session userId and redirect to the create-account page
     req.session.userId = savedUser._id;
     res.redirect(`/location-permission?userId=${newUser._id}`);
   } catch (error) {
@@ -98,18 +89,12 @@ router.post('/signup-data', async (req, res) => {
   }
 });
 
-//login data checking route
+// Handle user login: validate credentials, start session, redirect to home
 router.post('/login-data', async (req, res) => {
-  console.log('login data :', req.body);
   try {
     const userdata = await user.findOne({ email: req.body.email });
-    console.log('userdata :', userdata);
-
     if (userdata) {
-      const isPasswordValid = await bcrypt.compare(
-        req.body.password,
-        userdata.password
-      );
+      const isPasswordValid = await bcrypt.compare(req.body.password, userdata.password);
       if (isPasswordValid) {
         req.session.userId = userdata._id;
         res.redirect('/home');
@@ -125,99 +110,98 @@ router.post('/login-data', async (req, res) => {
   }
 });
 
-//saved the lat and long to database and redirects to notification handlebar
+// Save user's latitude and longitude, then redirect to notification permission
 router.post('/save-location', isAuthenticated, async (req, res) => {
   const { latitude, longitude } = req.body;
-
   try {
     await user.findByIdAndUpdate(req.session.userId, {
       location: { latitude, longitude }
-    })
-    res.json({ message: 'Location saved succesfully', redirect: `/notification?userId=${req.session.userId}` })
+    });
+    res.json({ message: 'Location saved succesfully', redirect: `/notification?userId=${req.session.userId}` });
   } catch (error) {
     console.log('Error Saving Location');
     res.status(500).json({ error: 'Failed to save location' });
   }
-})
+});
 
-//
+// Save user's notification preference and redirect to create account
 router.post('/enable-notifications', isAuthenticated, async (req, res) => {
   try {
     const { enabled } = req.body;
     await user.findByIdAndUpdate(req.session.userId, { NotificationsEnabled: !!enabled });
-    res.json({ redirect: `/createaccount?userId=${req.session.userId}` }); // Send redirect URL in JSON
+    res.json({ redirect: `/createaccount?userId=${req.session.userId}` });
   } catch (error) {
     console.error('Error enabling notifications:', error);
     res.status(500).json({ error: 'Failed to update notification preference' });
   }
 });
 
+// Save user's name and date of birth, then redirect to gender selection
 router.post('/createaccount', isAuthenticated, async (req, res) => {
   try {
     const { name, day, month, year } = req.body;
-
     if (!name || !day || !month || !year) {
-      return res.status(400).render('createaccount', { message: ' Please Fill Out the Fields ' })
-
+      return res.status(400).render('createaccount', { message: ' Please Fill Out the Fields ' });
     }
-
     await user.findByIdAndUpdate(req.session.userId, {
       firstName: name,
       dateOfBirth: new Date(`${year}-${month}-${day}`)
-    })
-    res.redirect(`/gender?userId=${req.session.userId}`)
+    });
+    res.redirect(`/gender?userId=${req.session.userId}`);
   } catch (error) {
     console.error('Error adding name and Date Of birth:', error);
     res.status(500).json({ error: 'Failed to add name and DOB' });
-
   }
-})
+});
 
-//to manage data from gender.hbs
+// Save user's gender selection and redirect to relationship type selection
 router.post('/gender', isAuthenticated, async (req, res) => {
   try {
-    const { gender } = req.body
-
+    const { gender } = req.body;
     if (!gender) {
-      return res.status(400).render('gender', { message: 'Please select the gender' })
+      return res.status(400).render('gender', { message: 'Please select the gender' });
     }
-
-    await user.findByIdAndUpdate(req.session.userId, {
-      gender: gender
-    });
-
-    res.redirect(`/typeOfRelationship?userId=${req.session.userId}`)
-
+    await user.findByIdAndUpdate(req.session.userId, { gender });
+    res.redirect(`/typeOfRelationship?userId=${req.session.userId}`);
   } catch (error) {
     console.error('Error adding Gender:', error);
     res.status(500).json({ error: 'Failed to assign gender' });
   }
-})
+});
 
-//data manage typeOfrelationship
+// Save user's relationship type choices (supports multiple selections), then redirect to height input
 router.post('/typeOfRelationship', isAuthenticated, async (req, res) => {
   try {
-    const { choice } = req.body
-
+    const { choice } = req.body;
     if (!choice) {
-      return res.status(400).render('typeOfRelationship', { message: 'Please select the a choice' })
+      return res.status(400).render('typeOfRelationship', { message: 'Please select the a choice' });
     }
     const choices = Array.isArray(req.body.choice) ? req.body.choice : [req.body.choice];
-    await user.findByIdAndUpdate(req.session.userId, {
-      choice: choices
-    });
-
-    res.redirect(`/height?userId=${req.session.userId}`)
-
+    await user.findByIdAndUpdate(req.session.userId, { choice: choices });
+    res.redirect(`/height?userId=${req.session.userId}`);
   } catch (error) {
     console.error('Error choosing type:', error);
     res.status(500).json({ error: 'Failed to assign type' });
   }
-})
+});
 
+// Save user's height in centimeters and redirect to home
+router.post('/height', isAuthenticated, async (req, res) => {
+  try {
+    let { height } = req.body;
+    height = Number(height);
+    if (!height || height < 50 || height > 250) {
+      return res.status(400).render('height', { message: 'Please enter a valid height in centimeters.' });
+    }
+    await user.findByIdAndUpdate(req.session.userId, { height });
+    res.redirect(`/home?userId=${req.session.userId}`);
+  } catch (error) {
+    console.error('Error choosing height:', error);
+    res.status(500).json({ error: 'Failed to choose height' });
+  }
+});
 
-
-//render gender.hbs page and get data from database
+// Render gender selection page with user's name
 router.get('/gender', isAuthenticated, async (req, res) => {
   try {
     const userData = await user.findById(req.session.userId).lean();
@@ -227,7 +211,7 @@ router.get('/gender', isAuthenticated, async (req, res) => {
   }
 });
 
-// display the signup hbs
+// Render signup page
 router.get('/signup', (req, res) => {
   try {
     res.render('signup');
@@ -236,34 +220,34 @@ router.get('/signup', (req, res) => {
   }
 });
 
-//display the createaccount hbs
+// Render create account page
 router.get('/createaccount', isAuthenticated, (req, res) => {
   res.render('createaccount');
 });
 
-//display the login hbs
+// Render login page
 router.get('/login', (req, res) => {
   res.render('login');
 });
 
-//home page rendering
+// Render home page
 router.get('/home', isAuthenticated, (req, res) => {
   res.render('home', { userId: req.session.userId });
 });
 
-//location-permission.hbs page rendering
+// Render location permission page
 router.get('/location-permission', isAuthenticated, (req, res) => {
   res.render('location-permission', { userId: req.session.userId });
 });
 
-//notification-permission.hbs page rendering
+// Render notification permission page
 router.get('/notification', isAuthenticated, (req, res) => {
   res.render('notification', { userId: req.session.userId });
 });
 
-//typeOfRelationship.hbs page rendering
+// Render relationship type selection page with user's name
 router.get('/typeOfRelationship', isAuthenticated, async (req, res) => {
-  try{
+  try {
     const userData = await user.findById(req.session.userId).lean();
     res.render('typeOfRelationship', { userId: req.session.userId, name: userData?.firstName });
   } catch (error) {
@@ -271,9 +255,9 @@ router.get('/typeOfRelationship', isAuthenticated, async (req, res) => {
   }
 });
 
-//typeOfRelationship.hbs page rendering
+// Render height input page with user's name
 router.get('/height', isAuthenticated, async (req, res) => {
-  try{
+  try {
     const userData = await user.findById(req.session.userId).lean();
     res.render('height', { userId: req.session.userId, name: userData?.firstName });
   } catch (error) {
