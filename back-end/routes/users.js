@@ -194,7 +194,7 @@ router.post('/height', isAuthenticated, async (req, res) => {
       return res.status(400).render('height', { message: 'Please enter a valid height in centimeters.' });
     }
     await user.findByIdAndUpdate(req.session.userId, { height });
-    res.redirect(`/home?userId=${req.session.userId}`);
+    res.redirect(`/hobby?userId=${req.session.userId}`);
   } catch (error) {
     console.error('Error choosing height:', error);
     res.status(500).json({ error: 'Failed to choose height' });
@@ -265,6 +265,23 @@ router.get('/height', isAuthenticated, async (req, res) => {
   }
 });
 
+// Render hobby selection page with user's name
+router.get('/hobby', isAuthenticated, async (req, res) => {
+  const popularHobbies = [
+    "Cats", "Writing", "Wine", "Crafts", "Dancing", "Baking", "Camping",
+    "Concerts", "Coffee", "Hiking trips", "R&B", "Country"
+  ];
+  const hobbyEmojis = [
+    "🐱", "📝", "🍷", "🧷", "💃", "🍰", "🏕️",
+    "🎟️", "☕", "🏕️", "🎵", "🎶"
+  ];
+  // More skills/hobbies for search only
+  const moreHobbies = [
+    "Coding", "Photography", "Chess", "Swimming", "Cycling", "Board games", "Poetry", "Traveling", "Knitting", "Running", "Cooking", "Painting", "Calligraphy", "Investing", "Public speaking", "Podcasting", "Robotics", "Astronomy", "Birdwatching", "Magic tricks", "Languages", "Rock climbing", "Surfing", "Pottery", "Origami", "Sculpting", "Martial arts", "Makeup", "Fashion", "Blogging", "Podcasting", "Volunteering", "Meditation", "Comics", "Anime", "Karaoke", "Guitar", "Piano", "Drums", "Singing", "DJing", "Mixology", "Baking", "Gardening", "Fishing", "Hiking", "Camping", "Archery", "Horse riding", "Sailing", "Skateboarding", "Snowboarding", "Skiing", "Parkour"
+  ];
+  res.render('hobby', { name: req.user?.firstName, popularHobbies, hobbyEmojis, moreHobbies: JSON.stringify(moreHobbies) });
+});
+
 //display the profile hbs
 // router.get('/profile', isAuthenticated, async (req, res) => {
 //   try {
@@ -293,5 +310,17 @@ router.get('/height', isAuthenticated, async (req, res) => {
 //     res.status(500).render('error', { message: 'Internal server error' });
 //   }
 // });
+
+router.post('/hobby', isAuthenticated, async (req, res) => {
+  let { hobbies } = req.body;
+  if (!hobbies) hobbies = [];
+  if (!Array.isArray(hobbies)) hobbies = [hobbies];
+  if (hobbies.length !== 5) {
+    // Optionally re-render with error
+    return res.status(400).render('hobby', { message: 'Please select exactly 5 interests.' });
+  }
+  await user.findByIdAndUpdate(req.session.userId, { hobbies });
+  res.redirect('/home');
+});
 
 module.exports = router;

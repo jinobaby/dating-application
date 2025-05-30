@@ -12,7 +12,8 @@ const userSchema = new mongoose.Schema({
         latitude : {type: Number},
         longitude : {type: Number}
     },
-    NotificationsEnabled: { type: Boolean, default: false }
+    NotificationsEnabled: { type: Boolean, default: false },
+    hobbies: [{ type: String }]
 })
 
 module.exports = mongoose.model('user-data', userSchema)

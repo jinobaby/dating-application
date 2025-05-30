@@ -15,18 +15,43 @@
       <a style="font-size: 20px;" class="form-title">Proud foodie or big on bouldering? Add interests to your profilr to help you match with people who love them too.</a>
     </header>
     
-    <form class="membership-form" action="/height" method="POST">
+    {{!-- filepath: d:\PROJECTS\budgetwise\back-end\views\hobby.hbs --}}
+    <form class="membership-form" action="/hobby" method="POST">
       <div class="form-group" style="gap: 15px;">
-       
-        <label class="form-label" for="height">Your height (cm)</label>
-        <input class="form-input" type="number" id="height" name="height" autocomplete="off" min="50" max="250" step="1" required>
-      
+        <div style="margin-bottom: 20px;">
+          <input
+            type="text"
+            class="form-search"
+            id="hobby-search"
+            placeholder="What are you into?"
+            style="width: 100%; font-size: 20px; border-radius: 38px; padding: 16px 24px; margin-bottom: 10px;"
+            autocomplete="off"
+            name="search"
+          />
+          <div style="font-weight: 700; color: #fff; font-size: 22px; margin-bottom: 12px; margin-top: 10px;">
+            You might like...
+          </div>
+        </div>
+        <div id="hobby-chips-container" class="hobby-chips-container" style="display: flex; flex-wrap: wrap; gap: 12px;">
+          {{#each popularHobbies}}
+            <label class="hobby-chip">
+              <input type="checkbox" name="hobbies" value="{{this}}" style="display: none;" />
+              <span style="margin-right: 8px;">{{lookup ../hobbyEmojis @index}}</span> {{this}}
+            </label>
+          {{/each}}
+        </div>
+        <div id="search-results" class="hobby-chips-container" style="display: flex; flex-wrap: wrap; gap: 12px; margin-top: 10px;"></div>
+        <div style="margin-top: 18px; color: #bbb; font-size: 15px;">
+          Choose up to 5 interests.
+        </div>
       </div>
-
       <button style="margin-bottom: 10px;" class="submit-button white-btn">Proceed →</button>
-
     </form>
   </div>
 
 </body>
 
+<script src='/javascripts/hobby.js'></script>
+<script>
+  window.moreHobbies = {{{moreHobbies}}};
+</script>
