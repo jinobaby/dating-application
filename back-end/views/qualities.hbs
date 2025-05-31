@@ -1,0 +1,49 @@
+<body class="membership-body">
+  <div class="form-container-image">
+
+    <img style="width: 100%; height: 100%; border-radius: 38px" src='/images/dating-page1.jpg' alt="Background Image">
+
+  </div>
+
+  <div class="form-container">
+    <div class="header-area">
+      <img class="form-logo" style="height: 50px; width: 50px;" src='/images/j-svg.svg' alt="Logo">
+    </div>
+
+    <header class="form-header">
+      <h1 style="font-size: 38px; color: #f9f9f9" class="form-subtitle">Tell us what you value in a person.</h1>
+      <a style="font-size: 20px;" class="form-title">Which qualities speak to your soul? Choose 3 that would make that connection much stronger.</a>
+    </header>
+    
+    <form class="membership-form" action="/qualities" method="POST">
+      <div class="form-group" style="gap: 15px;">
+        <div style="font-weight: 700; color: #fff; font-size: 20px;">
+          Qualities
+        </div>
+        <div class="habits-chips-row">
+          {{#each qualities}}
+            <label class="hobby-chip">
+              <input type="checkbox" name="qualities" value="{{this}}" style="display: none;" />
+              {{this}}
+              <span class="chip-icon">
+                <svg class="plus-icon" width="16" height="16" viewBox="0 0 16 16" fill="none">
+                  <path d="M8 3v10M3 8h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+                <svg class="close-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" style="display:none;">
+                  <path d="M4 4l8 8M12 4l-8 8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+              </span>
+            </label>
+          {{/each}}
+        </div>
+        <div style="margin-top: 18px; color: #bbb; font-size: 15px;">
+          Choose up to 3 qualities.
+        </div>
+      </div>
+      <button style="margin-bottom: 10px;" class="submit-button white-btn">Proceed →</button>
+    </form>
+  </div>
+
+</body>
+
+<script src='/javascripts/qualities.js'></script>

@@ -13,7 +13,12 @@ const userSchema = new mongoose.Schema({
         longitude : {type: Number}
     },
     NotificationsEnabled: { type: Boolean, default: false },
-    hobbies: [{ type: String }]
+    hobbies: [{ type: String }],
+    qualities: [{ type: String }],
+    drinking: { type: String },
+    smoking: { type: String },
+    kids: { type: String },
+    family: { type: String }
 })
 
 module.exports = mongoose.model('user-data', userSchema)

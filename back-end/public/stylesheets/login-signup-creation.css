@@ -1,10 +1,6 @@
-/* Fonts */
+/* ------------------- Fonts & Variables ------------------- */
 @import url('https://fonts.googleapis.com/css2?family=Marcellus&display=swap');
 
-*{
-padding: 0;
-margin: 0;
-}
 :root {
   --primary-red: #8c2022;
   --background-light: #f9f9f9;
@@ -12,7 +8,24 @@ margin: 0;
   --background-dark: #262626;
   --background-deep: #0d0d0d;
 }
-.membership-body{
+
+/* ------------------- Global Reset & Box Sizing ------------------- */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+
+/* ------------------- Layout Containers ------------------- */
+html, body {
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+}
+
+.membership-body {
   min-height: 100vh;
   min-width: 100vw;
   height: 100vh;
@@ -21,7 +34,8 @@ margin: 0;
   display: flex;
   background-color: var(--background-deep);
 }
-.form-container{
+
+.form-container {
   margin: 10px;
   font-family: 'Satoshi', sans-serif;
   flex: 1;
@@ -35,21 +49,32 @@ margin: 0;
   height: 100vh;
   padding-bottom: 24px;
 }
-.form-container-image{
+
+.form-container-image {
   margin: 10px;
   border-radius: 38px;
-  /* background-color: aqua; */
   flex: 1;
 }
-.header-area{
+
+.form-container-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 38px;
+  display: block;
+}
+
+/* ------------------- Header & Typography ------------------- */
+.header-area {
   height: 100px;
   width: 100%;
 }
-.form-logo{
-  /* position: absolute; */
+
+.form-logo {
   filter: brightness(0) invert(1); 
 }
-.form-header{
+
+.form-header {
   gap: 30px;
   display: flex;
   font-family: "Marcellus", serif;
@@ -58,30 +83,57 @@ margin: 0;
   letter-spacing: 2px;
   flex-direction: column;
 }
-.form-subtitle{
+
+.form-subtitle {
   font-weight: 900;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-.form-title{
+.form-title {
   font-weight: 600;
-    text-rendering: optimizeLegibility;
+  text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
+
+/* ------------------- Form Elements ------------------- */
+.membership-form {
+  margin-top: 40px;
+  display: flex;
+  flex-direction: column;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 20px;
+  gap: 10px;
+  font-size: 20px;
+}
+
+.form-label {
+  color: #fff;
+  font-weight: 500;
+  padding-left: 12px;
+  font-family: 'Satoshi', sans-serif;
+  letter-spacing: 1.2px;
+}
+
 .birthday-labels {
   display: flex;
   justify-content: space-between;
   margin-bottom: 5px;
   padding: 0 5px;
 }
+
 .birthday-labels .form-label {
   flex: 1;
   text-align: center;
   font-size: 16px;
-  color: #222;
+  color: #bbbbbb;
+  font-weight: 400;
 }
 
 .birthday-inputs {
@@ -102,11 +154,11 @@ margin: 0;
   box-sizing: border-box;
   min-width: 0;
 }
+
 /* Hide number input spinners for Chrome, Safari, Edge, Opera */
 .birthday-input::-webkit-outer-spin-button,
 .birthday-input::-webkit-inner-spin-button,
-.form-input::-webkit-inner-spin-button
-{
+.form-input::-webkit-inner-spin-button {
   -webkit-appearance: none;
   margin: 0;
 }
@@ -116,11 +168,54 @@ margin: 0;
   -moz-appearance: textfield;
 }
 
+/* ------------------- Input Styles ------------------- */
+.form-input {
+  padding-left: 15px;
+  border-radius: 38px;
+  border: none;
+  background-color: var(--background-dark);
+  font-family: 'Satoshi', sans-serif;
+  font-weight: 500;
+  letter-spacing: 1.2px;
+  font-size: 15px;
+  height: 50px;
+  color: var(--text-muted);
+}
+
+.form-search {
+  padding-left: 15px;
+  border-radius: 38px;
+  border: none;
+  background-color: var(--background-dark);
+  font-family: 'Satoshi', sans-serif;
+  font-weight: 500;
+  letter-spacing: 1.2px;
+  font-size: 15px;
+  height: 40px;
+  color: var(--text-muted);
+}
+
+.form-input:focus {
+  border: none;
+  outline: none;
+}
+
 .dark-input {
   background: #222;
   color: #fff;
   border: none;
   box-shadow: none;
+}
+
+/* ------------------- Button Styles ------------------- */
+.submit-button {
+  height: 45px;
+  font-size: 15px;
+  font-family: 'Satoshi', sans-serif;
+  letter-spacing: 1.2px;
+  font-weight: 600;
+  border-radius: 38px; 
+  border: none;
 }
 
 .white-btn {
@@ -136,31 +231,29 @@ margin: 0;
   color: #000 !important;
 }
 
-.form-label {
-  color: #fff;
-  font-weight: 500;
+.submit-button:hover {
+  background-color: var();
 }
 
-.birthday-labels .form-label {
-  color: #bbbbbb;
-  font-size: 16px;
+/* ------------------- Consent & Links ------------------- */
+.consent-group {
+  font-family: 'Satoshi', sans-serif;
   font-weight: 400;
 }
 
-.membership-form{
-  margin-top: 40px;
-  display: flex;
-  flex-direction: column;
+.consent-link, .login-redirect-a {
+  text-decoration: none;
+  color: var(--text-muted);
+  transition: 0.5s;
 }
 
-.form-group{
-  display: flex;
-  flex-direction: column;
-  margin-bottom: 20px;
-  gap: 10px;
-  font-size: 20px;
+.consent-link:hover, .login-redirect-a:hover {
+  text-decoration-line: line-through;
+  letter-spacing: 0.2px;
 }
-.form-radio-group{
+
+/* ------------------- Custom Radio & Checkbox ------------------- */
+.form-radio-group {
   display: flex;
   flex-direction: row;
   gap: 20px;
@@ -174,6 +267,7 @@ margin: 0;
   align-items: center;
   justify-content: space-between;
 }
+
 .custom-radio-label {
   display: flex;
   align-items: center;
@@ -206,79 +300,8 @@ margin: 0;
   background: #fff;
   box-shadow: 0 0 0 4px #222 inset;
 }
-.form-label{
-  padding-left: 12px;
-  font-family: 'Satoshi', sans-serif;
-  font-weight: 600;
-  letter-spacing: 1.2px;
-}
 
-.form-input{
-  padding-left: 15px;
-  border-radius: 38px;
-  border: none;
-  background-color: var(--background-dark);
-  font-family: 'Satoshi', sans-serif;
-  font-weight: 500;
-  letter-spacing: 1.2px;
-  font-size: 15px;
-  height: 50px;
-  color: var(--text-muted);
-}
-
-.form-search{
-  padding-left: 15px;
-  border-radius: 38px;
-  border: none;
-  background-color: var(--background-dark);
-  font-family: 'Satoshi', sans-serif;
-  font-weight: 500;
-  letter-spacing: 1.2px;
-  font-size: 15px;
-  height: 40px;
-  color: var(--text-muted);
-}
-.form-input:focus{
-  border: none;
-  outline: none;
-}
-
-.submit-button{
-  height: 45px;
-  font-size: 15px;
-  font-family: 'Satoshi', sans-serif;
-  letter-spacing: 1.2px;
-  font-weight: 600;
-  border-radius: 38px; 
-  border: none;
-  
-}
-.submit-button:hover{
-  background-color: var();
-}
-
-.consent-group{
-  font-family: 'Satoshi', sans-serif;
-  font-weight: 400;
-}
-.consent-link, .login-redirect-a{
-  text-decoration: none;
-  color: var(--text-muted);
-  transition: 0.5s;
-}
-.consent-link:hover, .login-redirect-a:hover{
-  text-decoration-line: line-through;
-  letter-spacing: 0.2px;
-}
-
-/* location part */
-.body-container{
-  /* font-family: "Marcellus", serif;
-  font-weight: 400;
-  font-style: normal;
-  letter-spacing: 1.5px; */
-}
-/* Default hobby chip style */
+/* ------------------- Hobby/Quality Chips ------------------- */
 .hobby-chip {
   display: flex;
   align-items: center;
@@ -289,11 +312,11 @@ margin: 0;
   background: #181818;
   color: #fff;
   cursor: pointer;
-  transition: border 0.2s, background 0.2s, color 0.2s;
+  transition: background 0.2s, color 0.2s, border 0.2s;
   margin-bottom: 4px;
 }
 
-/* Invert the entire chip when checked */
+/* Invert the entire chip when checked (for both hobbies and qualities) */
 .hobby-chip:has(input[type="checkbox"]:checked) {
   background: #fff;
   color: #181818;
@@ -305,28 +328,54 @@ margin: 0;
   color: #181818;
 }
 
-/* Make sure everything uses border-box */
-*, *::before, *::after {
-  box-sizing: border-box;
+.habits-chips-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 8px;
 }
 
-/* Prevent scrolling */
-html, body {
-  height: 100%;
-  width: 100%;
-  overflow: hidden;
+.hobby-chip.selected,
+.hobby-chip:has(input[type="radio"]:checked) {
+  background: #fff;
+  color: #181818;
+  border-color: #181818;
 }
 
-/* Ensure image fits container */
-.form-container-image img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  border-radius: 38px;
-  display: block;
+.chip-icon {
+  display: inline-flex;
+  align-items: center;
+  margin-left: 8px;
+  font-size: 16px;
+  background: none;
+  border-radius: 0;
+  width: auto;
+  height: auto;
+  color: inherit;
+  transition: color 0.2s, background 0.2s, transform 0.2s;
 }
 
-/* Responsive: stack on small screens */
+.hobby-chip:has(input:checked) .chip-icon {
+  transform: rotate(90deg) scale(1.2);
+}
+
+/* Tooltip style for hobby chips */
+.hobby-chip:hover::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  background: #222;
+  color: #fff;
+  padding: 4px 10px;
+  border-radius: 8px;
+  font-size: 13px;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  white-space: nowrap;
+  z-index: 10;
+}
+
+/* ------------------- Responsive Design ------------------- */
 @media (max-width: 1024px) {
   .form-container-image {
     display: none;
