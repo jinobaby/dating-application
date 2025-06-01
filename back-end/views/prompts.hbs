@@ -1,0 +1,58 @@
+<body class="membership-body">
+    <div class="form-container-image">
+        <img style="width: 100%; height: 100%; border-radius: 38px" src='/images/dating-page1.jpg'
+            alt="Background Image">
+    </div>
+
+    <div class="form-container">
+
+        <div class="header-area">
+            <img class="form-logo" style="height: 50px; width: 50px;" src='/images/j-svg.svg' alt="Logo">
+        </div>
+
+        <header class="form-header">
+            <h1 style="font-size: 38px; color: #f9f9f9" class="form-subtitle">What is it like to date you?</h1>
+            <a style="font-size: 20px;" class="form-title">A joy, obviously, but go ahead and answer in your own
+                words.</a>
+        </header>
+
+        <form class="membership-form" action="/prompts" method="POST">
+            <div class="form-group" style="gap: 15px;">
+                <div class="prompt-categories">
+                    {{#each categories}}
+                    <button type="button" class="prompt-tab {{#if (eq ../selectedCategory this)}}active{{/if}}"
+                        data-category="{{this}}">
+                        {{this}}
+                    </button>
+                    {{/each}}
+                </div>
+                <div class="prompt-questions">
+                    {{#each questions.[selectedCategory]}}
+                    <div class="prompt-question-row" data-question="{{this}}">
+                        <span>{{this}}</span>
+                        <button type="button" class="answer-btn">Answer</button>
+                    </div>
+                    {{/each}}
+                </div>
+                <div id="prompt-answer-modal" style="display:none;">
+                    <div>
+                        <div id="prompt-question-title"></div>
+                        <textarea id="prompt-answer-input" maxlength="160"></textarea>
+                        <div><span id="char-count">0</span>/160</div>
+                        <button type="button" id="save-answer-btn">Save</button>
+                    </div>
+                </div>
+                <div>
+                    <ul id="selected-prompts-list"></ul>
+                    <div id="prompt-limit-msg" style="color:red; display:none;">You can answer up to 3 prompts.</div>
+                </div>
+            </div>
+            <input type="hidden" name="prompts" id="prompts-hidden" />
+            <button style="margin-bottom: 10px;" class="submit-button white-btn">Proceed →</button>
+        </form>
+    </div>
+    </div>
+
+</body>
+
+<script src='/javascripts/prompt.js'></script>

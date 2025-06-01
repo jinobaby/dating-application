@@ -5,11 +5,15 @@ const path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var mongoose =require('mongoose')
-
+const hbs = require('hbs'); // or require('express-handlebars') if you use that
 var session = require('express-session')
 var mongoStore = require('connect-mongo')
 
 var app = express();
+
+hbs.registerHelper('eq', function(a, b) {
+  return a === b;
+});
 
 const fs = require('fs');
 const uploadDir = path.join(__dirname, 'public/uploads');

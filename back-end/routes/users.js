@@ -280,8 +280,8 @@ router.get('/kidsnfamily', isAuthenticated, async (req, res) => {
 
 // --- religion and politics ---
 router.post('/religionNpolitics', isAuthenticated, async (req, res) => {
-  const { family, kids } = req.body;
-  await user.findByIdAndUpdate(req.session.userId, { family, kids });
+  const { religion, politics } = req.body;
+  await user.findByIdAndUpdate(req.session.userId, { religion, politics });
   res.redirect(`/causesNcommunities?userId=${req.session.userId}`)
 })
 
@@ -291,14 +291,31 @@ router.get('/religionNpolitics', isAuthenticated, async (req, res) => {
 
 // --- causes and communities ---
 router.post('/causesNcommunities', isAuthenticated, async (req, res) => {
-  const { family, kids } = req.body;
-  await user.findByIdAndUpdate(req.session.userId, { family, kids });
-  res.redirect(`/home?userId=${req.session.userId}`)
+  let { cause } = req.body;
+  if (!cause) cause = [];
+  if (!Array.isArray(cause)) cause = [cause];
+  await user.findByIdAndUpdate(req.session.userId, { causes: cause });
+  res.redirect(`/upload?userId=${req.session.userId}`)
 })
 
 router.get('/causesNcommunities', isAuthenticated, async (req, res) => {
   res.render('causesNcommunities', { userId: req.session.userId });
 })  
+
+// --- upload ---
+router.get('/upload', isAuthenticated, async (req, res) => {
+  res.render('upload', { userId: req.session.userId });
+});
+
+router.post('/upload', isAuthenticated, async (req, res) => {
+  let { cause } = req.body;
+  if (!cause) cause = [];
+  if (!Array.isArray(cause)) cause = [cause];
+  await user.findByIdAndUpdate(req.session.userId, { causes: cause });
+  res.redirect(`/home?userId=${req.session.userId}`);
+}); 
+
+
 
 
 module.exports = router;

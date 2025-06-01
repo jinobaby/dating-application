@@ -18,7 +18,15 @@ const userSchema = new mongoose.Schema({
     drinking: { type: String },
     smoking: { type: String },
     kids: { type: String },
-    family: { type: String }
+    family: { type: String },
+    religion: { type: String },
+    politics: { type: String },
+    // causes: [{ type: String }],
+    //     prompts: [{
+    //     category: String,
+    //     question: String,
+    //     answer: String
+    // }]
 })
 
 module.exports = mongoose.model('user-data', userSchema)
