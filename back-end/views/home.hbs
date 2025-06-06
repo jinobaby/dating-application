@@ -1,7 +1,7 @@
 <link href="https://api.fontshare.com/v2/css?f[]=satoshi@300,400,500,700,900&display=swap" rel="stylesheet">
 
 <body class="home-body">
-  
+
   <div class="home-left">
 
     <div class="home-header-logo">
@@ -9,31 +9,195 @@
     </div>
 
     <div class="home-navigation">
-      
+
       <a href='/profile'>
-      <img class="icon icon-profile" width="50" height="50" src="https://img.icons8.com/ios-filled/50/user-male-circle.png" alt="user-male-circle"/>
-      Profile
+        <img class="icon icon-profile" width="50" height="50"
+          src="https://img.icons8.com/ios-filled/50/user-male-circle.png" alt="user-male-circle" />
+        Profile
       </a>
-      
+
       <a href="">
-      <img class="icon icon-profile" width="50" height="50" src="https://img.icons8.com/ios-filled/50/star--v1.png" alt="star--v1"/>
-      Standouts
+        <img class="icon icon-profile" width="50" height="50" src="https://img.icons8.com/ios-filled/50/star--v1.png"
+          alt="star--v1" />
+        Standouts
       </a>
-      
-      <a href="">
-      <img class="icon icon-profile" width="50" height="50" src="https://img.icons8.com/ios-filled/50/love-circled.png" alt="love-circled"/>
-      Likes You
+
+      <a href="/likes">
+        <img class="icon icon-profile" width="50" height="50"
+          src="https://img.icons8.com/ios-filled/50/love-circled.png" alt="love-circled" />
+        Likes You
       </a>
-      
-      <a href="">
-        <img class="icon icon-profile" width="50" height="50" src="https://img.icons8.com/ios/50/topic--v1.png" alt="topic--v1"/>      Matches
+
+      <a href="/matches">
+        <img class="icon icon-profile" width="50" height="50" src="https://img.icons8.com/ios/50/topic--v1.png"
+          alt="topic--v1" /> Matches
+      </a>
+
+      <a href="/login">
+        <img class="icon icon-logout"  width="50" height="50" src="https://img.icons8.com/ios-filled/50/exit.png" alt="exit"/>
+        Logout
       </a>
 
     </div>
 
   </div>
 
-  <div class="home-middle"></div>
+  <div class="home-middle">
+    <div id="profile-card">
+
+    {{#each profiles}}
+
+      <div class="user-card" data-user-id="{{this._id}}">
+        <img src="{{this.images.[0]}}" alt="User Image" class="user-image">
+  
+        <div class="user-card-main">
+          <h2>{{this.firstName}}, {{this.age}}</h2>
+        </div>
+  
+      <div class="user-card-section">
+      
+        <h2
+          style="font-family: 'Satoshi', sans-serif; color: #f9f9f9; font-weight: 900; font-size: 22px; letter-spacing: 1.2px;">
+          <b>About Me</b>
+        </h2>
+  
+        <div class="mini-card-container">
+          <div class="mini-card">
+            <svg xmlns="http://www.w3.org/2000/svg" width="100px" height="25px" viewBox="0 0 16 16" fill="#ffffff">
+              <path fill="#ffffff" fill-rule="evenodd"
+                d="M10.121 2.343a1 1 0 0 1 1.415 0l2.12 2.121a1 1 0 0 1 0 1.415L5.88 13.657a1 1 0 0 1-1.414 0l-2.122-2.121a1 1 0 0 1 0-1.415zm-5.785 7.2L3.05 10.828l2.122 2.122l7.778-7.778l-2.121-2.122l-1.286 1.286L10.707 5.5L10 6.207L8.836 5.043l-.793.793L9.207 7l-.707.707l-1.164-1.164l-.793.793L7.707 8.5L7 9.207L5.836 8.043l-.793.793L6.207 10l-.707.707z"
+                clip-rule="evenodd" />
+            </svg>
+            <a class="mini-a">{{this.height}}</a>
+          </div>
+  
+          <div class="mini-card">
+            <svg xmlns="http://www.w3.org/2000/svg" width="100px" height="25" viewBox="0 0 48 48" fill="#ffffff">
+              <path fill="none" stroke="#ffffff" stroke-linecap="round" stroke-linejoin="round"
+                d="M18.758 43.5h10.484M24 43.5V28.822L9.322 13.62h29.356L24 28.822" />
+              <path fill="none" stroke="#ffffff" stroke-linecap="round" stroke-linejoin="round"
+                d="M14.25 18.338s2.422-.734 3.67-.734s2.421.734 3.669.734s2.422-.734 3.67-.734s2.421.734 3.669.734s2.421-.754 3.67-.734c.552.009 1.614.377 1.614.377m-6.962-.167l4.273-8.412m1.751-3.446l.74-1.456" />
+              <circle cx="32.345" cy="7.676" r="1.887" fill="none" stroke="#ffffff" stroke-linecap="round"
+                stroke-linejoin="round" />
+            </svg>
+            <a class="mini-a">{{this.drinking}}</a>
+          </div>
+  
+          <div class="mini-card">
+            <svg xmlns="http://www.w3.org/2000/svg" width="100px" height="25" viewBox="0 0 1792 1344" fill="#ffffff">
+              <path fill="#ffffff"
+                d="M1504 640q0-23-5-40t-17-27.5t-22.5-17t-33-9.5t-36.5-4.5t-43-2.5q-47-2-72-4t-72-13t-75.5-29.5t-66-56t-61-89.5T957 214.5T928 32q0-14 9-23t23-9t23 9t9 23q7 86 23 154t35.5 114t47.5 79.5t54.5 52t62 29.5t62.5 14t64 4q10 0 35.5.5t35 1t31.5 2.5t31 5t25.5 9t24 14t18 20t15 27t8 36t3.5 46v96q0 14-9 23t-23 9t-23-9t-9-23v-96zm0-320q-2-160-160-160h-96q-14 0-23-9t-9-23t9-23t23-9h96q101 0 158.5 49.5T1560 292q53 0 85 9.5t61 40.5q56 60 54 170v224q0 14-9 23t-23 9t-23-9t-9-23V512q0-72-31-116t-97-44h-64v-32zM0 832h1408v320H0V832zm1503 0q-12 0-21.5 9t-9.5 22v258q0 13 9.5 22t21.5 9h66q12 0 21.5-9t9.5-22V863q0-13-9.5-22t-21.5-9h-66zm192 0q-12 0-21.5 9t-9.5 22v258q0 13 9.5 22t21.5 9h66q12 0 21.5-9t9.5-22V863q0-13-9.5-22t-21.5-9h-66z" />
+            </svg>
+            <a class="mini-a">{{this.smoking}}</a>
+          </div>
+  
+          <div class="mini-card">
+            <svg xmlns="http://www.w3.org/2000/svg" width="100px" height="25" viewBox="0 0 256 256" fill="#ffffff">
+              <path fill="#ffffff"
+                d="M160 40a32 32 0 1 0-32 32a32 32 0 0 0 32-32Zm-32 16a16 16 0 1 1 16-16a16 16 0 0 1-16 16Zm90.34 78.05l-45.17-51.22a32 32 0 0 0-24-10.83h-42.34a32 32 0 0 0-24 10.83l-45.17 51.22a20 20 0 0 0 28.13 28.43l16.3-13.08l-16.54 62.88A20 20 0 0 0 102 228.8l26-44.87l26 44.87a20 20 0 0 0 36.41-16.52l-16.5-62.88l16.3 13.08a20 20 0 0 0 28.13-28.43Zm-11.51 16.77a4 4 0 0 1-5.66 0c-.21-.2-.42-.4-.65-.58L165 121.76a8 8 0 0 0-12.74 8.24l22.88 87a7.72 7.72 0 0 0 .48 1.35a4 4 0 1 1-7.25 3.38a6.25 6.25 0 0 0-.33-.63L134.92 164a8 8 0 0 0-13.84 0L88 221.05a6.25 6.25 0 0 0-.33.63a4 4 0 0 1-2.26 2.07a4 4 0 0 1-5-5.45a7.72 7.72 0 0 0 .48-1.35L103.74 130A8 8 0 0 0 91 121.76l-35.52 28.48c-.23.18-.44.38-.65.58a4 4 0 1 1-5.66-5.65c.12-.12.23-.24.34-.37l45.32-51.39a16 16 0 0 1 12-5.41h42.34a16 16 0 0 1 12 5.41l45.32 51.39c.11.13.22.25.34.37a4 4 0 0 1 0 5.65Z" />
+            </svg>
+            <a class="mini-a">{{this.gender}}</a>
+          </div>
+  
+          <div class="mini-card">
+            <svg xmlns="http://www.w3.org/2000/svg" width="100px" height="25" viewBox="0 0 384 512" fill="#ffffff">
+              <path fill="#ffffff"
+                d="M256 128c35.35 0 64-28.65 64-64S291.35 0 256 0s-64 28.65-64 64s28.65 64 64 64zm-30.63 169.75c14.06 16.72 39 19.09 55.97 5.22l88-72.02c17.09-13.98 19.59-39.19 5.62-56.28c-13.97-17.11-39.19-19.59-56.31-5.62l-57.44 47l-38.91-46.31c-15.44-18.39-39.22-27.92-64-25.33c-24.19 2.48-45.25 16.27-56.37 36.92l-49.37 92.03c-23.4 43.64-8.69 96.37 34.19 123.75L131.56 432H40c-22.09 0-40 17.91-40 40s17.91 40 40 40h208c34.08 0 53.77-42.79 28.28-68.28L166.42 333.86l34.8-64.87l24.15 28.76z" />
+            </svg>
+            <a class="mini-a">{{this.religion}}</a>
+          </div>
+  
+          <div class="mini-card">
+            <svg xmlns="http://www.w3.org/2000/svg" width="100px" height="25" viewBox="0 0 384 512" fill="#ffffff">
+              <path fill="#ffffff"
+                d="M256 128c35.35 0 64-28.65 64-64S291.35 0 256 0s-64 28.65-64 64s28.65 64 64 64zm-30.63 169.75c14.06 16.72 39 19.09 55.97 5.22l88-72.02c17.09-13.98 19.59-39.19 5.62-56.28c-13.97-17.11-39.19-19.59-56.31-5.62l-57.44 47l-38.91-46.31c-15.44-18.39-39.22-27.92-64-25.33c-24.19 2.48-45.25 16.27-56.37 36.92l-49.37 92.03c-23.4 43.64-8.69 96.37 34.19 123.75L131.56 432H40c-22.09 0-40 17.91-40 40s17.91 40 40 40h208c34.08 0 53.77-42.79 28.28-68.28L166.42 333.86l34.8-64.87l24.15 28.76z" />
+            </svg>
+            <a class="mini-a">{{this.religion}}</a>
+          </div>
+  
+        </div>
+  
+      </div>
+  
+  
+      <div class="user-card-section">
+        <h2
+          style="font-family: 'Satoshi', padding-top: '10px', sans-serif; color: #f9f9f9; font-weight: 900; font-size: 22px; letter-spacing: 1.2px;">
+          <b>I'm looking for </b>
+        </h2>
+        <div class="mini-card-container">
+        
+          <div class="mini-card">
+            <a class="mini-a">{{this.qualities.[0]}}</a>
+          </div>
+  
+          <div class="mini-card">
+            <a class="mini-a">{{this.qualities.[1]}}</a>
+          </div>
+  
+          <div class="mini-card">
+            <a class="mini-a">{{this.qualities.[2]}}</a>
+          </div>
+  
+        </div>
+      </div>
+  
+      <img src="{{this.images.[1]}}" alt="User Image" class="user-image">
+  
+      <div class="user-card-section">
+        <h2
+          style="font-family: 'Satoshi', padding-top: '10px', sans-serif; color: #f9f9f9; font-weight: 900; font-size: 22px; letter-spacing: 1.2px;">
+          <b>My Interests </b>
+        </h2>
+        <div class="mini-card-container">
+        
+          {{#each this.hobbies}}
+          <div class="mini-card">
+            <span class="mini-emoji">
+              {{lookup ../hobbyEmojis @index}}
+            </span>
+            <a class="mini-a">{{this}}</a>
+          </div>
+          {{/each}}
+  
+        </div>
+      </div>
+  
+      <div class="user-card-section">
+        <h2
+          style="font-family: 'Satoshi', padding-top: '10px', sans-serif; color: #f9f9f9; font-weight: 900; font-size: 22px; letter-spacing: 1.2px;">
+          <b>My causes and communities </b>
+        </h2>
+        <div class="mini-card-container">
+        
+          {{#each this.causes}}
+          <div class="mini-card">
+            <span class="mini-emoji">
+              {{lookup ../causeEmojis @index}}
+            </span>
+            <a class="mini-a">{{this}}</a>
+          </div>
+          {{/each}}
+  
+        </div>
+      </div>
+      
+      <img src="{{this.images.[2]}}" alt="User Image" class="user-image">
+      <img src="{{this.images.[3]}}" alt="User Image" class="user-image">
+      <img src="{{this.images.[4]}}" alt="User Image" class="user-image">
+      <img src="{{this.images.[5]}}" alt="User Image" class="user-image">
+  
+      <div style="display: flex; justify-content: space-between; margin-left: 90px; margin-right: 90px;">
+        <button class="btn-bottom skip-btn">Skip</button>
+        <button class="btn-bottom match-btn">Match</button>
+      </div>
+    </div>
+    {{/each}}
+    </div>
+  </div>
+
+  </div>
+
   <div class="home-right">
     <div class="home-right-filters"></div>
     <div class="home-right-likes"></div>
@@ -54,4 +218,40 @@
     <p>&copy; 2025 Dating Website. All rights reserved.</p>
   </footer> --}}
 </body>
-</html>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+  const userCards = document.querySelectorAll('.user-card');
+  let currentIndex = 0;
+
+  function showCard(index) {
+    userCards.forEach((card, i) => {
+      card.style.display = i === index ? 'block' : 'none';
+    });
+  }
+
+  showCard(currentIndex);
+
+  document.querySelectorAll('.match-btn, .skip-btn').forEach(button => {
+    button.addEventListener('click', async (e) => {
+      const action = e.target.classList.contains('match-btn') ? 'match' : 'skip';
+      const userId = userCards[currentIndex].dataset.userId;
+
+      const response = await fetch('/swipe-action', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ targetUserId: userId, action })
+      });
+
+      if (response.ok) {
+        currentIndex++;
+        if (currentIndex < userCards.length) {
+          showCard(currentIndex);
+        } else {
+          document.getElementById('profile-card').innerHTML = '<p>No more profiles to show.</p>';
+        }
+      }
+    });
+  });
+});
+</script>

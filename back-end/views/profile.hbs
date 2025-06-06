@@ -1,0 +1,59 @@
+<body class="profile-body">
+    <div class="profile-midcard">
+        <button id="next-image-btn">
+            <div class="image-viewer-container">
+                <div class="image-display">
+                    <img id="active-image" src="" alt="Active User Image" style="width: 100%; height: auto;">
+                    <div class="overlay">
+                        <p class="overlay-text">{{user.firstName}}, {{user.age}}</p>
+                    </div>
+                </div>
+
+                <div class="controls">
+                </div>
+            </div>
+
+            <!-- Keep your original image list exactly as is -->
+            <ul id="image-list" style="display: none;">
+                {{#each user.images}}
+                <li><img src="{{this}}" alt="User Image" style="width: 100px;"></li>
+                {{/each}}
+            </ul>
+        </button>
+        <h1>Welcome, {{user.firstName}}</h1>
+        <p><b>Email:</b> {{user.email}}</p>
+        <p><b>Gender:</b> {{user.gender}}</p>
+        <p><b>Height:</b> {{user.height}} cm</p>
+        <p><b>Hobbies:</b> {{#each user.hobbies}}{{this}}, {{/each}}</p>
+        <p><b>Qualities:</b> {{#each user.qualities}}{{this}}, {{/each}}</p>
+        <p><b>Drinking:</b> {{user.drinking}}</p>
+        <p><b>Smoking:</b> {{user.smoking}}</p>
+        <p><b>Family:</b> {{user.family}}</p>
+        <p><b>Kids: </b>{{user.kids}}</p>
+        <p><b>Religion:</b> {{user.religion}}</p>
+        <p><b>Politics:</b> {{user.politics}}</p>
+        <p><b>Causes:</b> {{#each user.causes}}{{this}}, {{/each}}</p>
+
+    </div>
+</body>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const imageListItems = document.querySelectorAll('#image-list li img');
+        const activeImage = document.getElementById('active-image');
+        const nextBtn = document.getElementById('next-image-btn');
+
+        let index = 0;
+        const images = Array.from(imageListItems).map(img => img.src);
+
+        // Set initial image
+        if (images.length > 0) {
+            activeImage.src = images[0];
+        }
+
+        nextBtn.addEventListener('click', () => {
+            index = (index + 1) % images.length;
+            activeImage.src = images[index];
+        });
+    });
+</script>

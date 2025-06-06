@@ -1,0 +1,67 @@
+<body class="home-body">
+
+    <div class="home-left">
+
+        <div class="home-header-logo">
+            <img src="/images/j-svg.svg" style="filter: brightness(0) invert(1);" height="100px" width="100px" alt="">
+        </div>
+
+        <div class="home-navigation">
+
+            <a href='/profile'>
+                <img class="icon icon-profile" width="50" height="50"
+                    src="https://img.icons8.com/ios-filled/50/user-male-circle.png" alt="user-male-circle" />
+                Profile
+            </a>
+
+            <a href="">
+                <img class="icon icon-profile" width="50" height="50"
+                    src="https://img.icons8.com/ios-filled/50/star--v1.png" alt="star--v1" />
+                Standouts
+            </a>
+
+            <a href="/likes">
+                <img class="icon icon-profile" width="50" height="50"
+                    src="https://img.icons8.com/ios-filled/50/love-circled.png" alt="love-circled" />
+                Likes You
+            </a>
+
+            <a href="/matches">
+                <img class="icon icon-profile" width="50" height="50" src="https://img.icons8.com/ios/50/topic--v1.png"
+                    alt="topic--v1" /> Matches
+            </a>
+
+            <a href="/login">
+              <img class="icon icon-logout"  width="50" height="50" src="https://img.icons8.com/ios-filled/50/exit.png" alt="exit"/>
+              Logout
+            </a>
+
+        </div>
+
+    </div>
+
+    <div class="home-middle">
+        <div class="g-form">
+
+
+            <h2>People Who Liked You</h2>
+            {{#if likes.length}}
+            <ul>
+                {{#each likes}}
+                <li style="display: flex; align-items: center; gap: 16px;">
+                    {{#if this.images.[0]}}
+                    <img src="{{this.images.[0]}}" alt="User Image"
+                        style="width:60px; height:60px; border-radius:50%; object-fit:cover;">
+                    {{else}}
+                    <img src="/images/default-profile.png" alt="User Image"
+                        style="width:60px; height:60px; border-radius:50%; object-fit:cover;">
+                    {{/if}}
+                    <span>{{this.firstName}}</span>
+                </li> {{/each}}
+            </ul>
+            {{else}}
+            <p>No one has liked you yet.</p>
+            {{/if}}
+        </div>
+    </div>
+</body>

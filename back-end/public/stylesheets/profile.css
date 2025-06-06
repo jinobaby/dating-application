@@ -1,0 +1,149 @@
+/* ------------------- Fonts & Variables ------------------- */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap');
+
+:root {
+  --primary-red: #8c2022;
+  --background-light: #f9f9f9;
+  --text-muted: #bbbbbb;
+  --background-dark: #262626;
+  --background-deep: #0d0d0d;
+}
+
+/* General body styling */
+.profile-body {
+  font-family: 'Satoshi', sans-serif;
+  background-color: var(--background-deep);
+  color: var(--text-color);
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start; /* Align items at the top to allow scrolling */
+  min-height: 100vh;
+  overflow-y: auto; /* Enable vertical scrolling */
+}
+
+/* Ensure the html and body elements allow scrolling */
+html, body {
+  height: 100%;
+  overflow-y: auto; /* Enable scrolling for the entire page */
+}
+
+/* Profile card container */
+.profile-midcard {
+  background: var(--background-color);
+  border-radius: 16px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+  padding: 30px;
+  width: 90%;
+  max-width: 700px;
+  text-align: center;
+}
+
+/* Profile header */
+.profile-midcard h1 {
+  font-size: 32px;
+  color: var(--primary-color);
+  margin-bottom: 20px;
+}
+
+.profile-midcard p {
+  font-size: 16px;
+  color: var(--text-muted);
+  margin: 8px 0;
+}
+
+.profile-midcard p b {
+  color: var(--text-color);
+}
+
+/* Image viewer container */
+.image-viewer-container {
+  margin-bottom: 30px;
+  position: relative;
+}
+
+/* Image display container */
+.image-display {
+  position: relative; /* Enables positioning of overlay inside the container */
+  width: 100%;
+  max-width: 280px; /* Adjust width as needed */
+  border-radius: 16px; /* Optional: Adjust border radius */
+  overflow: hidden; /* Ensures no overflow */
+}
+
+/* Image styling */
+.image-display img {
+  width: 100%;
+  height: auto;
+  object-fit: cover; /* Ensures the image covers the container */
+}
+
+/* Overlay container */
+.overlay {
+  position: absolute;
+  bottom: 10px; /* Position the overlay at the bottom of the image */
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: rgba(0, 0, 0, 0.6); /* Semi-transparent background */
+  padding: 8px 16px;
+  border-radius: 12px;
+}
+
+/* Overlay text styling */
+.overlay-text {
+  color: #fff;
+  font-size: 16px;
+  font-weight: 600;
+  text-align: center;
+}
+
+/* Next image button */
+#next-image-btn {
+  background-color: transparent;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  margin-top: 10px;
+}
+
+/* Profile details */
+.profile-details {
+  text-align: left;
+  margin-top: 20px;
+}
+
+.profile-details p {
+  font-size: 16px;
+  margin: 10px 0;
+  line-height: 1.6;
+}
+
+.profile-details p b {
+  font-weight: 600;
+  color: var(--text-color);
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .profile-midcard {
+    padding: 20px;
+  }
+
+  .profile-midcard h1 {
+    font-size: 28px;
+  }
+
+  .profile-midcard p {
+    font-size: 14px;
+  }
+
+  #next-image-btn {
+    font-size: 14px;
+    padding: 10px 20px;
+  }
+}

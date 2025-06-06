@@ -21,12 +21,11 @@ const userSchema = new mongoose.Schema({
     family: { type: String },
     religion: { type: String },
     politics: { type: String },
-    // causes: [{ type: String }],
-    //     prompts: [{
-    //     category: String,
-    //     question: String,
-    //     answer: String
-    // }]
+    images: [{ type: String }],
+    causes: [{ type: String }],
+    likes: { type: [String], default: [] },
+    matches: { type: [String], default: [] },
+    dislikes: { type: [String], default: [] }
 })
 
 module.exports = mongoose.model('user-data', userSchema)

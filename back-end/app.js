@@ -8,6 +8,8 @@ var mongoose =require('mongoose')
 const hbs = require('hbs'); // or require('express-handlebars') if you use that
 var session = require('express-session')
 var mongoStore = require('connect-mongo')
+const multer = require('multer');
+
 
 var app = express();
 
@@ -21,6 +23,27 @@ const uploadDir = path.join(__dirname, 'public/uploads');
 if (!fs.existsSync(uploadDir)) {
   fs.mkdirSync(uploadDir, { recursive: true });
 }
+
+// --- Multer ---
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, path.join(__dirname, '../public/uploads'));
+  },
+  filename: (req, file, cb) => {
+    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+    cb(null, uniqueSuffix + '-' + file.originalname);
+  }
+});
+
+const fileFilter = (req, file, cb) => {
+  const allowedTypes = ['image/jpeg', 'image/png', 'image/jpg'];
+  cb(null, allowedTypes.includes(file.mimetype));
+};
+
+const upload = multer({
+  storage,
+  fileFilter,
+});
 
 //database connection
 mongoose.connect('mongodb://127.0.0.1:27017/back-end-DatingSite').then(() => {

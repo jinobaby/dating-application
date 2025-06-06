@@ -1,0 +1,78 @@
+<body class="home-body">
+
+    <div class="home-left">
+
+        <div class="home-header-logo">
+            <img src="/images/j-svg.svg" style="filter: brightness(0) invert(1);" height="100px" width="100px" alt="">
+        </div>
+
+        <div class="home-navigation">
+
+            <a href='/profile'>
+                <img class="icon icon-profile" width="50" height="50"
+                    src="https://img.icons8.com/ios-filled/50/user-male-circle.png" alt="user-male-circle" />
+                Profile
+            </a>
+
+            <a href="">
+                <img class="icon icon-profile" width="50" height="50"
+                    src="https://img.icons8.com/ios-filled/50/star--v1.png" alt="star--v1" />
+                Standouts
+            </a>
+
+            <a href="/likes">
+                <img class="icon icon-profile" width="50" height="50"
+                    src="https://img.icons8.com/ios-filled/50/love-circled.png" alt="love-circled" />
+                Likes You
+            </a>
+
+            <a href="/matches">
+                <img class="icon icon-profile" width="50" height="50" src="https://img.icons8.com/ios/50/topic--v1.png"
+                    alt="topic--v1" /> Matches
+            </a>
+
+
+            <a href="/login">
+                <img class="icon icon-logout" width="50" height="50" src="https://img.icons8.com/ios-filled/50/exit.png" alt="exit" />
+                Logout
+            </a>
+
+        </div>
+
+    </div>
+
+    <div class="home-middle">
+        {{!-- filepath: d:\PROJECTS\budgetwise\back-end\views\matches.hbs --}}
+        <div class="g-form">
+            <h2>Your Matches</h2>
+            {{#if matches.length}}
+            {{#each matches}}
+            <div class="user-card" style="margin-bottom: 32px;">
+                {{#if this.images.[0]}}
+                <img src="{{this.images.[0]}}" alt="User Image" class="user-image"
+                    style="width:120px; height:120px; border-radius:38px; object-fit:cover;">
+                {{else}}
+                <img src="/images/default-profile.png" alt="User Image" class="user-image"
+                    style="width:120px; height:120px; border-radius:38px; object-fit:cover;">
+                {{/if}}
+                <div style="margin-top: 10px;">
+                    <strong>{{this.firstName}}</strong>
+                    {{#if this.age}}, {{this.age}}{{/if}}
+                </div>
+                {{#if this.hobbies.length}}
+                <div style="margin-top: 8px;">
+                    <span style="font-weight:600;">Hobbies:</span>
+                    {{#each this.hobbies}}
+                    <span style="margin-right: 8px;">{{this}}</span>
+                    {{/each}}
+                </div>
+                {{/if}}
+                {{!-- Add more profile details as needed --}}
+            </div>
+            {{/each}}
+            {{else}}
+            <p>No matches yet.</p>
+            {{/if}}
+        </div>
+    </div>
+</body>

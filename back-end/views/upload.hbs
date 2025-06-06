@@ -15,22 +15,47 @@
 
     <form class="membership-form" action="/upload" method="POST" enctype="multipart/form-data">
       <div class="form-group" style="gap: 15px;">
-        <div class="photo-grid">
-          {{#each [0,1,2,3,4,5]}}
-            <div class="photo-uploader" data-index="{{this}}">
-              <input type="file" name="photos" accept="image/*" class="photo-input" id="photo-input-{{this}}" style="display:none;">
-              <label for="photo-input-{{this}}" class="photo-label">
-                <span class="plus-icon">+</span>
-                <img class="photo-preview" id="photo-preview-{{this}}" style="display:none;" />
-              </label>
-            </div>
-          {{/each}}
-        </div>
+        <input type="file" id="image1" name="image1">
+        <img id="preview1" style="width:100px;display:none;">
+        <input type="file" id="image2" name="image2">
+        <img id="preview2" style="width:100px;display:none;">
+        <input type="file" id="image3" name="image3">
+        <img id="preview3" style="width:100px;display:none;">
+        <input type="file" id="image4" name="image4">
+        <img id="preview4" style="width:100px;display:none;">
+        <input type="file" id="image5" name="image5">
+        <img id="preview5" style="width:100px;display:none;">
+        <input type="file" id="image6" name="image6">
+        <img id="preview6" style="width:100px;display:none;">
       </div>
       <button style="margin-bottom: 10px;" class="submit-button white-btn">Proceed →</button>
     </form>
   </div>
 </body>
 
-<script src='/javascripts/upload.js'></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  console.log('Script loaded!');
+  for (let i = 1; i <= 6; i++) {
+    const input = document.getElementById(`image${i}`);
+    const preview = document.getElementById(`preview${i}`);
+    if (input && preview) {
+      input.addEventListener('change', function (event) {
+        console.log(`Input ${i} changed`);
+        const file = event.target.files[0];
+        if (file) {
+          const reader = new FileReader();
+          reader.onload = function (e) {
+            preview.src = e.target.result;
+            preview.style.display = 'block';
+          };
+          reader.readAsDataURL(file);
+        } else {
+          preview.style.display = 'none';
+        }
+      });
+    }
+  }
+});
+</script>
 

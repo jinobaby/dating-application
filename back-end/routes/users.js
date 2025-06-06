@@ -1,11 +1,21 @@
 const router = require('express').Router();
 const bcrypt = require('bcrypt');
 const user = require('../models/userSchema');
-const multer = require('multer');
 var post = require('../models/postSchema');
-const { route } = require('../app');
 const path = require('path');
-const { log } = require('console');
+const multer = require('multer');
+
+// --- Multer setup (move this to the top!) ---
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, path.join(__dirname, '../public/uploads'));
+  },
+  filename: (req, file, cb) => {
+    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+    cb(null, uniqueSuffix + '-' + file.originalname);
+  }
+});
+const upload = multer({ storage });
 
 // Middleware to check if user is authenticated (session-based)
 function isAuthenticated(req, res, next) {
@@ -197,15 +207,15 @@ router.get('/hobby', isAuthenticated, async (req, res) => {
   ];
   // More skills/hobbies for search only
   const moreHobbies = [
-    "Coding", "Photography", "Chess", "Swimming", "Cycling", "Board games", 
-    "Poetry", "Traveling", "Knitting", "Running", "Cooking", "Painting", 
+    "Coding", "Photography", "Chess", "Swimming", "Cycling", "Board games",
+    "Poetry", "Traveling", "Knitting", "Running", "Cooking", "Painting",
     "Calligraphy", "Investing", "Public speaking", "Podcasting", "Robotics",
     "Astronomy", "Birdwatching", "Magic tricks", "Languages", "Rock climbing",
-    "Surfing", "Pottery", "Origami", "Sculpting", "Martial arts", "Makeup", 
-    "Fashion", "Blogging", "Podcasting", "Volunteering", "Meditation", "Comics", 
-    "Anime", "Karaoke", "Guitar", "Piano", "Drums", "Singing", "DJing", 
-    "Mixology", "Baking", "Gardening", "Fishing", "Hiking", "Camping", 
-    "Archery", "Horse riding", "Sailing", "Skateboarding", "Snowboarding", 
+    "Surfing", "Pottery", "Origami", "Sculpting", "Martial arts", "Makeup",
+    "Fashion", "Blogging", "Podcasting", "Volunteering", "Meditation", "Comics",
+    "Anime", "Karaoke", "Guitar", "Piano", "Drums", "Singing", "DJing",
+    "Mixology", "Baking", "Gardening", "Fishing", "Hiking", "Camping",
+    "Archery", "Horse riding", "Sailing", "Skateboarding", "Snowboarding",
     "Skiing", "Parkour"
   ];
   res.render('hobby', { name: req.user?.firstName, popularHobbies, hobbyEmojis, moreHobbies: JSON.stringify(moreHobbies) });
@@ -224,17 +234,91 @@ router.post('/hobby', isAuthenticated, async (req, res) => {
 });
 
 // --- Home ---
-router.get('/home', isAuthenticated, (req, res) => {
-  res.render('home', { userId: req.session.userId });
+router.get('/home', isAuthenticated, async (req, res) => {
+  try {
+    const currentUserId = req.session.userId;
+    const profiles = await user.find({ _id: { $ne: currentUserId } }).lean(); // Exclude logged-in user
+
+    // Calculate age for each profile
+    profiles.forEach(profile => {
+      if (profile.dateOfBirth) {
+        const today = new Date();
+        const birthDate = new Date(profile.dateOfBirth);
+        let age = today.getFullYear() - birthDate.getFullYear();
+        const monthDiff = today.getMonth() - birthDate.getMonth();
+        if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+          age--;
+        }
+        profile.age = age; // Add age to the profile object
+      }
+    });
+
+    res.render('home', { profiles });
+  } catch (error) {
+    console.error('Error fetching profiles:', error);
+    res.status(500).render('error', { message: 'Failed to load home page' });
+  }
+});
+
+router.post('/swipe-action', isAuthenticated, async (req, res) => {
+  try {
+    const { targetUserId, action } = req.body;
+    const currentUserId = req.session.userId;
+
+    if (!targetUserId || !action) {
+      return res.status(400).json({ error: 'Missing targetUserId or action' });
+    }
+
+    if (action === 'match') {
+      await user.findByIdAndUpdate(currentUserId, { $addToSet: { likes: targetUserId } });
+      const targetUser = await user.findById(targetUserId);
+      if (targetUser && Array.isArray(targetUser.likes) && targetUser.likes.includes(currentUserId)) {
+        await user.findByIdAndUpdate(currentUserId, { $addToSet: { matches: targetUserId } });
+        await user.findByIdAndUpdate(targetUserId, { $addToSet: { matches: currentUserId } });
+      }
+    } else if (action === 'skip') {
+      await user.findByIdAndUpdate(currentUserId, { $addToSet: { dislikes: targetUserId } });
+    } else {
+      return res.status(400).json({ error: 'Invalid action' });
+    }
+
+    res.json({ success: true });
+  } catch (error) {
+    console.error('Error processing swipe action:', error);
+    res.status(500).json({ error: 'Failed to process swipe action' });
+  }
+});
+
+// --- Profile ---
+router.get('/profile', isAuthenticated, async (req, res) => {
+  try {
+    const userData = await user.findById(req.session.userId).lean();
+    res.render('profile', { user: userData });
+  } catch (error) {
+    console.error('Error fetching user data for profile:', error);
+    res.status(500).render('error', { message: 'Failed to load profile page' });
+  }
+});
+
+router.post('/updateProfile', isAuthenticated, async (req, res) => {
+  try {
+    const { name, hobbies } = req.body;
+    const updatedData = { firstName: name, hobbies: Array.isArray(hobbies) ? hobbies : [hobbies] };
+    await user.findByIdAndUpdate(req.session.userId, updatedData);
+    res.redirect('/profile');
+  } catch (error) {
+    console.error('Error updating profile:', error);
+    res.status(500).render('error', { message: 'Failed to update profile' });
+  }
 });
 
 // --- Qualities ---
 router.get('/qualities', isAuthenticated, async (req, res) => {
   const qualities = [
-  "Ambition", "Confidence", "Curiosity", "Emotional intelligence", "Empathy", "Generosity",
-  "Gratitude", "Humility", "Humour", "Kindness", "Leadership", "Loyalty",
-  "Openness", "Optimism", "Playfulness", "Sarcasm", "Sassiness"
-];
+    "Ambition", "Confidence", "Curiosity", "Emotional intelligence", "Empathy", "Generosity",
+    "Gratitude", "Humility", "Humour", "Kindness", "Leadership", "Loyalty",
+    "Openness", "Optimism", "Playfulness", "Sarcasm", "Sassiness"
+  ];
   res.render('qualities', { qualities, userId: req.session.userId });
 })
 
@@ -243,7 +327,7 @@ router.post('/qualities', isAuthenticated, async (req, res) => {
   if (!qualities) qualities = [];
   if (!Array.isArray(qualities)) qualities = [qualities];
   if (qualities.length !== 3) {
-    return res.status(400).render('qualities', { 
+    return res.status(400).render('qualities', {
       qualities: [
         "Ambition", "Confidence", "Curiosity", "Emotional intelligence", "Empathy", "Generosity",
         "Gratitude", "Humility", "Humour", "Kindness", "Leadership", "Loyalty",
@@ -300,22 +384,69 @@ router.post('/causesNcommunities', isAuthenticated, async (req, res) => {
 
 router.get('/causesNcommunities', isAuthenticated, async (req, res) => {
   res.render('causesNcommunities', { userId: req.session.userId });
-})  
+})
 
 // --- upload ---
 router.get('/upload', isAuthenticated, async (req, res) => {
   res.render('upload', { userId: req.session.userId });
 });
 
-router.post('/upload', isAuthenticated, async (req, res) => {
-  let { cause } = req.body;
-  if (!cause) cause = [];
-  if (!Array.isArray(cause)) cause = [cause];
-  await user.findByIdAndUpdate(req.session.userId, { causes: cause });
-  res.redirect(`/home?userId=${req.session.userId}`);
-}); 
+router.post('/upload', isAuthenticated, upload.fields([
+  { name: 'image1', maxCount: 1 },
+  { name: 'image2', maxCount: 1 },
+  { name: 'image3', maxCount: 1 },
+  { name: 'image4', maxCount: 1 },
+  { name: 'image5', maxCount: 1 },
+  { name: 'image6', maxCount: 1 }
+]), async (req, res) => {
+  try {
+    // Collect file paths for each image (if uploaded)
+    const images = [];
+    for (let i = 1; i <= 6; i++) {
+      if (req.files[`image${i}`] && req.files[`image${i}`][0]) {
+        images.push('/uploads/' + req.files[`image${i}`][0].filename);
+      } else {
+        images.push(null); // Or skip, or use a default image
+      }
+    }
 
+    // Save to MongoDB (assuming user is logged in and userSchema has an 'images' field)
+    await user.findByIdAndUpdate(req.session.userId, { images });
 
+    res.redirect(`home` + `?userId=${req.session.userId}`);
+  } catch (err) {
+    console.error('Upload error:', err);
+    res.status(500).render(`home?userId=${req.session.userId}`, { message: 'Image upload failed. Please try again.' });
+  }
+});
 
+// --- Matches: users who mutually liked each other ---
+router.get('/matches', isAuthenticated, async (req, res) => {
+  try {
+    const currentUser = await user.findById(req.session.userId).lean();
+    // Find users whose _id is in currentUser.matches
+    const matchedUsers = await user.find({ _id: { $in: currentUser.matches || [] } }).lean();
+    res.render('matches', { matches: matchedUsers });
+  } catch (error) {
+    console.error('Error fetching matches:', error);
+    res.status(500).render('error', { message: 'Failed to load matches' });
+  }
+});
+
+// --- Likes: users who liked the current user but are not yet matched ---
+router.get('/likes', isAuthenticated, async (req, res) => {
+  try {
+    const currentUser = await user.findById(req.session.userId).lean();
+    // Find users who have liked the current user, but are not yet matched
+    const likedUsers = await user.find({
+      likes: req.session.userId,
+      _id: { $nin: currentUser.matches || [] }
+    }).lean();
+    res.render('likes', { likes: likedUsers });
+  } catch (error) {
+    console.error('Error fetching likes:', error);
+    res.status(500).render('error', { message: 'Failed to load likes' });
+  }
+});
 
 module.exports = router;
