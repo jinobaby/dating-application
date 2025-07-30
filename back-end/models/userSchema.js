@@ -1,13 +1,14 @@
 const mongoose = require('mongoose')
 
 const userSchema = new mongoose.Schema({
-    firstName: { type: String },
+    name: { type: String, required: true },
+    phone: { type: String, required: true },
+    email: { type: String, required: true },
+    password: { type: String, required: true },
     dateOfBirth: { type: Date },
     gender: { type: String },
     choice: [{ type: String }],
     height: { type: Number },
-    email: { type: String, required: true},
-    password: { type: String, required: true},
     location: {
         latitude : {type: Number},
         longitude : {type: Number}
@@ -25,7 +26,7 @@ const userSchema = new mongoose.Schema({
     causes: [{ type: String }],
     likes: { type: [String], default: [] },
     matches: { type: [String], default: [] },
-    dislikes: { type: [String], default: [] }
+    dislikes: { type: [String], default: [] },
 })
 
-module.exports = mongoose.model('user-data', userSchema)
+module.exports = mongoose.model('user-datas', userSchema)

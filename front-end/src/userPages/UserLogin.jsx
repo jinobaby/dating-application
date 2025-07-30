@@ -1,9 +1,61 @@
 import React, { useState } from 'react'
 import '../styles/login-signup-creation.css'
 import ImageShuffle from '../components/ImageShuffle';
+import { useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 
 function UserLogin() {
-    const [message, setMessage] = useState('');
+    const dispatch = useDispatch()
+    const navigate = useNavigate()
+
+
+    const [loginData, setLoginData] = useState({
+        email: '',
+        password: ''
+    })
+
+    const [loading, setLoading] = useState(false)
+    const [message, setMessage] = useState('')
+
+    function handleInputChange(e) {
+        const { name, value } = e.target
+        setLoginData((prevData) => ({
+            ...prevData,
+            [name]: value
+        }))
+    }
+
+    async function handleLogin() {
+        try {
+            // Arrange
+            if (!loginData.email || !loginData.password) {
+                setMessage('Please fill in all fields')
+                return
+            }
+
+            setLoading(true)
+            setMessage('')
+
+            // Act
+            const response = await userLoginApi(loginData)
+
+            // Assert
+            if (response && response.data.Token) {
+                dispatch(userLoginData(response.data))
+                setMessage('Login successful! Redirecting...')
+                setTimeout(() => {
+                    navigate('/home')
+                }, 1000)
+            } else {
+                setMessage(response.data?.message || 'Login failed')
+            }
+        } catch (error) {
+            setMessage(error.response?.data?.message || 'Login failed. Please try again.')
+        } finally {
+            setLoading(false)
+        }
+    }
+
     return (
         <div className="membership-body">
 
@@ -21,14 +73,21 @@ function UserLogin() {
                 </header>
 
                 <form className="membership-form" action="/login-data" method="POST">
+
                     <div className="form-group">
                         <label className="form-label" htmlFor="email">Email</label>
-                        <input className="form-input" type="email" id="email" name="email" placeholder="Enter your Email address" autoComplete="off" />
+                        <input className="form-input" type="email" id="email" name="email" placeholder="Enter your Email address" value={loginData.email}
+                            onChange={handleInputChange}
+                            disabled={loading} 
+                            autoComplete="off" />
                     </div>
 
                     <div className="form-group">
                         <label className="form-label" htmlFor="password">Password</label>
-                        <input className="form-input" type="password" id="password" name="password" placeholder="Create your Password" autoComplete="off" />
+                        <input className="form-input" type="password" id="password" name="password" placeholder="Create your Password" value={loginData.password}
+                            onChange={handleInputChange}
+                            disabled={loading} 
+                            autoComplete="off" />
                     </div>
 
                     {message && (
@@ -47,10 +106,14 @@ function UserLogin() {
                         </div>
                     )}
 
-                    <button style={{ marginBottom: "10px", marginTop: "10px" }} className="submit-button">Proceed →</button>
+                    <button style={{ marginBottom: "10px", marginTop: "10px" }} 
+                    type='button'
+                    onClick={handleLogin}
+                    disabled={loading}
+                    className="submit-button">{loading ? 'Loading...' : 'Login →'}</button>
 
                     <div>
-                        <label htmlFor="login-label-redirect">If you havent created account already click here to
+                        <label htmlFor="login-label-redirect">If you haven't created account already click here to
                             <a href="/Signup" className="login-redirect-a" > Signup </a>
                         </label>
                     </div>

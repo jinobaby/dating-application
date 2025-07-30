@@ -3,7 +3,10 @@ import axios from 'axios';
 var Baseurl = import.meta.env.VITE_BASE_URL;
 
 export const basicRequest = axios.create({
-    baseURL: Baseurl
+    baseURL: Baseurl,
+    headers: {
+        'Content-Type': 'application/json'
+    }
 })
 
 export const UserRequest = axios.create({

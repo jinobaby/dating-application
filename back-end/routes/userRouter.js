@@ -3,6 +3,10 @@ const UserSchema = require('../models/userSchema')
 const crypto = require('crypto-js')
 const JWT = require('jsonwebtoken')
 
+console.log('User Router Initialized');
+
+
+
 router.post('/Signup', async (req, res) => {
     try {
         // Arrange
@@ -48,10 +52,11 @@ router.post('/Signup', async (req, res) => {
     }
 })
 
-router.post('/login', async (req, res) => {
+router.post('/Login', async (req, res) => {
     try {
         // Arrange
         const { email, password } = req.body
+        console.log('Login Route Hit', email);
 
         if (!email || !password) {
             return res.status(400).json({ message: "Email and password are required" })
@@ -62,8 +67,10 @@ router.post('/login', async (req, res) => {
             return res.status(404).json({ message: "User not found. Please signup to proceed!" })
         }
 
+
         const bytes = crypto.AES.decrypt(user.password, process.env.password)
         const originalPassword = bytes.toString(crypto.enc.Utf8)
+        console.log('🔑 Login attempt:', { inputPassword: password, decryptedPassword: originalPassword })
 
         // Act
         const isPasswordValid = password === originalPassword

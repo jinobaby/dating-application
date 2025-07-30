@@ -1,52 +1,131 @@
-import React from 'react'
+import React, { useState } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
 import ImageShuffle from '../components/ImageShuffle'
+import { userSignupApi } from '../api/userAPI'
 
 function UserSignup() {
-    return (
-        <div className="membership-body">
+  const navigate = useNavigate()
 
-            <ImageShuffle />
+  const [userData, setUserData] = useState({
+    name: '',
+    phone: '',
+    email: '',
+    password: '',
+  })
 
-            <div className="form-container">
+  const [loading, setLoading] = useState(false)
+  const [message, setMessage] = useState('')
 
-                <div className="header-area">
-                    <img className="form-logo" style={{ height: "50px", width: "50px" }} src='/images/j-svg.svg' alt="Logo" />
-                </div>
+  function handleInputChange(e) {
+    const { name, value } = e.target
+    setUserData((prevData) => ({
+      ...prevData,
+      [name]: value
+    }))
+  }
 
-                <header className="form-header">
-                    <h1 style={{ fontSize: "38px", color: "#f9f9f9" }} className="form-subtitle">Get Started</h1>
-                    <a style={{ fontSize: "20px" }} className="form-title">Sign up via Email and create your own Password.</a>
-                </header>
+  async function handleSignup(e) {
+    e.preventDefault();
+    try {
+      // Arrange
+      if (!userData.name || !userData.phone || !userData.email || !userData.password) {
+        setMessage('Please fill in all fields')
+        return
+      }
 
-                <form className="membership-form" action="/signup-data" method="POST">
-                    <div className="form-group">
-                        <label className="form-label" htmlFor="email">Email</label>
-                        <input className="form-input" type="email" id="email" name="email" placeholder="Enter your Email address" autoComplete="off" />
-                    </div>
+      setLoading(true)
+      setMessage('')
 
-                    <div className="form-group">
-                        <label className="form-label" htmlFor="password">Password</label>
-                        <input className="form-input" type="password" id="password" name="password" placeholder="Create your Password" autoComplete="off" />
-                    </div>
+      // Act
+      const response = await userSignupApi(userData)
 
-                    <button style={{ marginBottom: "10px" }} className="submit-button">Proceed →</button>
+      // Assert
+      if (response.status === 200) {
+        setMessage('Account generated successfully! Redirecting...')
 
-                    <div className="consent-group">
-                        <label className="consent-label" htmlFor="consent">
-                            By continuing, you agree to our
-                            <a className="consent-link" href="#">terms and conditions</a>
-                            , and
-                            <a className="consent-link" href="#">privacy policy.</a>
-                        </label>
-                    </div>
+        setUserData({
+          name: '',
+          phone: '',
+          email: '',
+          password: '',
+        })
 
-                </form>
+        setTimeout(() => {
+          navigate('/Login')
+        }, 2000)
+      }
+    } catch (error) {
+      setMessage(error.response?.data?.message || 'Signup failed. Please try again.')
+    } finally {
+      setLoading(false)
+    }
+  }
 
-            </div>
+  return (
+    <div className="membership-body">
 
+      <ImageShuffle />
+
+      <div className="form-container">
+
+        <div className="header-area">
+          <img className="form-logo" style={{ height: "50px", width: "50px" }} src='/images/j-svg.svg' alt="Logo" />
         </div>
 
-    )
+        <header className="form-header">
+          <h1 style={{ fontSize: "38px", color: "#f9f9f9" }} className="form-subtitle">Get Started</h1>
+          <a style={{ fontSize: "20px" }} className="form-title">Sign up via Email and create your own Password.</a>
+        </header>
+
+        <form className="membership-form" onSubmit={handleSignup}>
+          <div className="form-group">
+            <label className="form-label" htmlFor="name">Name</label>
+            <input className="form-input" type="text" id="name" name="name"
+              value={userData.name}
+              onChange={handleInputChange}
+              disabled={loading} required />
+          </div>
+
+          <div className="form-group">
+            <label className="form-label" htmlFor="email">Email</label>
+            <input className="form-input" type="email" id="email" name="email"
+              value={userData.email}
+              onChange={handleInputChange}
+              disabled={loading} required />
+          </div>
+
+          <div className="form-group">
+            <label className="form-label" htmlFor="phone">Phone</label>
+            <input className="form-input" type="text" id="phone" name="phone"
+              value={userData.phone}
+              onChange={handleInputChange}
+              disabled={loading} required />
+          </div>
+
+          <div className="form-group">
+            <label className="form-label" htmlFor="password">Password</label>
+            <input className="form-input" type="password" id="password" name="password"
+              value={userData.password}
+              onChange={handleInputChange}
+              disabled={loading} required />
+          </div>
+
+          {message && <div style={{ color: "var(--primary-red)", marginTop: 10 }}>{message}</div>}
+
+          <button style={{ marginBottom: "10px" }}
+            type="submit"
+            disabled={loading}
+            className="submit-button">Proceed →</button>
+
+          <p>Already have an account? <Link to="/Login">Login here</Link></p>
+
+        </form>
+
+      </div>
+
+    </div>
+
+  )
 }
 
 export default UserSignup

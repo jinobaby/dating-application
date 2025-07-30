@@ -3,6 +3,8 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import UserLogin from './userPages/UserLogin'
 import UserSignup from './userPages/UserSignup'
 import AccountCreation from './userPages/AccountCreation'
+import UserPrivate from './components/UserPrivate'
+import Userlayout from './components/UserLayout'
 
 
 function App() {
@@ -16,12 +18,12 @@ function App() {
           {/* User Public Login */}
           <Route path='/Signup' element={<UserSignup />} />
           <Route path='/Login' element={<UserLogin />} />
-          <Route path='/AccountCreation' element={<AccountCreation />} />
 
           {/* User Private */}
-          {/* <Route element={<UserPrivate> <Userlayout/> </UserPrivate>}> */}
+          <Route element={<UserPrivate> <Userlayout /> </UserPrivate>}>
+            <Route path='/AccountCreation' element={<AccountCreation />} />
 
-          {/* </Route> */}
+          </Route>
 
         </Routes>
       </Router>
