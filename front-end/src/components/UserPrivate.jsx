@@ -12,7 +12,7 @@ function UserPrivate({ children }) {
     }
 
     if (!Token) {
-        return <Navigate to='/login' replace />
+        return <Navigate to='/Login' replace />
     } else {
         return children
     }

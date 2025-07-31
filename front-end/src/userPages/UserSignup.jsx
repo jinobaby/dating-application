@@ -36,11 +36,15 @@ function UserSignup() {
       setLoading(true)
       setMessage('')
 
+      console.log('Attempting signup with:', userData)
+
       // Act
       const response = await userSignupApi(userData)
+      console.log('Signup response:', response)
 
       // Assert
-      if (response.status === 200) {
+      if (response && response.status === 200) {
+        console.log('Signup successful')
         setMessage('Account generated successfully! Redirecting...')
 
         setUserData({
@@ -55,6 +59,7 @@ function UserSignup() {
         }, 2000)
       }
     } catch (error) {
+      console.error('Signup error:', error)
       setMessage(error.response?.data?.message || 'Signup failed. Please try again.')
     } finally {
       setLoading(false)

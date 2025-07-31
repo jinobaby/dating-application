@@ -3,6 +3,8 @@ import '../styles/login-signup-creation.css'
 import ImageShuffle from '../components/ImageShuffle';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
+import { userLoginApi } from '../api/userAPI';
+import { userLoginData } from '../redux/userSlice';
 
 function UserLogin() {
     const dispatch = useDispatch()
@@ -36,20 +38,25 @@ function UserLogin() {
             setLoading(true)
             setMessage('')
 
+            console.log('Attempting login with:', loginData)
+
             // Act
             const response = await userLoginApi(loginData)
+            console.log('Login response:', response)
 
             // Assert
             if (response && response.data.Token) {
+                console.log('Login successful, dispatching to Redux')
                 dispatch(userLoginData(response.data))
                 setMessage('Login successful! Redirecting...')
                 setTimeout(() => {
-                    navigate('/home')
+                    navigate('/AccountCreation')
                 }, 1000)
             } else {
                 setMessage(response.data?.message || 'Login failed')
             }
         } catch (error) {
+            console.error('Login error:', error)
             setMessage(error.response?.data?.message || 'Login failed. Please try again.')
         } finally {
             setLoading(false)

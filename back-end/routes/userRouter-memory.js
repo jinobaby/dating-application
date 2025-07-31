@@ -50,7 +50,7 @@ router.post('/Signup', async (req, res) => {
     }
 })
 
-router.post('/login', async (req, res) => {
+router.post('/Login', async (req, res) => {
     try {
         // Arrange
         const { email, password } = req.body

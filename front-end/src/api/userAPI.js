@@ -12,7 +12,7 @@ export const userSignupApi = async (data) => {
 
 export const userLoginApi = async (data) => {
     try {
-        const response = await basicRequest.post('/User/login', data)
+        const response = await basicRequest.post('/User/Login', data)
         return response;
     } catch (error) {
         console.log('Error from user login API', error);
