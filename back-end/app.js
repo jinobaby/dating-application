@@ -9,7 +9,7 @@ const hbs = require('hbs'); // or require('express-handlebars') if you use that
 var session = require('express-session')
 var mongoStore = require('connect-mongo')
 const multer = require('multer');
-
+require('dotenv').config();
 
 var app = express();
 
@@ -46,7 +46,7 @@ const upload = multer({
 });
 
 //database connection
-mongoose.connect('mongodb://127.0.0.1:27017/back-end-DatingSite').then(() => {
+mongoose.connect(process.env.MONGODB_URI).then(() => {
   console.log("Database Connected");
 }).catch((error) => {
   console.log("Error from database", error);
@@ -60,7 +60,7 @@ app.use(
     resave: false,
     saveUninitialized: false,
     store: mongoStore.create({
-      mongoUrl: 'mongodb://127.0.0.1:27017/back-end-DatingSite',
+      mongoUrl: process.env.MONGODB_URI,
       collectionName: 'sessions',
     }),
     cookie: {
